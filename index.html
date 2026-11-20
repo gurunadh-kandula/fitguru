@@ -2544,6 +2544,445 @@
       color: #3b82f6;
     }
 
+
+    /* JEFIT FULL-SCREEN ACTIVE WORKOUT PLAYER (IMG_8135, 8136, 8137) */
+    .active-workout-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: #0b0d12;
+      display: none;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .active-workout-overlay.open {
+      display: flex;
+    }
+
+    .aw-shell {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      background: #0b0d12;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: calc(var(--safe-bottom) + 148px);
+      position: relative;
+    }
+
+    .aw-hero {
+      position: relative;
+      width: 100%;
+      height: 245px;
+      background: #f4f1ea;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: height 0.25s ease;
+    }
+
+    .aw-hero.collapsed {
+      height: calc(var(--safe-top) + 64px);
+      background: #0b0d12;
+    }
+
+    .aw-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding-top: calc(var(--safe-top) + 12px);
+    }
+
+    .aw-hero.collapsed img,
+    .aw-hero.collapsed .aw-vitals-pill {
+      display: none;
+    }
+
+    .aw-top-controls {
+      position: absolute;
+      top: calc(var(--safe-top) + 10px);
+      left: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 5;
+    }
+
+    .aw-top-left, .aw-top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .aw-round-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(30, 35, 48, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .aw-compact-vitals {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .aw-hero.collapsed .aw-compact-vitals {
+      display: flex;
+    }
+
+    .aw-vitals-pill {
+      position: absolute;
+      right: 14px;
+      bottom: 18px;
+      background: rgba(30, 35, 48, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 7px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .aw-seg-bar {
+      display: flex;
+      gap: 6px;
+      padding: 0 14px;
+      margin-top: -8px;
+      position: relative;
+      z-index: 6;
+    }
+
+    .aw-hero.collapsed + .aw-seg-bar {
+      margin-top: 2px;
+    }
+
+    .aw-seg {
+      flex: 1;
+      height: 4px;
+      border-radius: 99px;
+      background: #2a303f;
+      cursor: pointer;
+    }
+
+    .aw-seg.done {
+      background: #3b82f6;
+    }
+
+    .aw-seg.active {
+      background: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+    }
+
+    .aw-ex-header {
+      padding: 14px 16px 8px;
+    }
+
+    .aw-ex-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+
+    .aw-sub-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 8px;
+    }
+
+    .aw-chip-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .aw-pill-chip {
+      background: #1c212c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .aw-pill-chip span.blue {
+      color: #60a5fa;
+    }
+
+    .aw-1rm-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    .aw-1rm-tag strong {
+      color: #3b82f6;
+    }
+
+    .aw-table-head {
+      display: grid;
+      grid-template-columns: 44px 1fr 1fr 44px;
+      padding: 10px 16px 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .aw-set-row {
+      display: grid;
+      grid-template-columns: 44px 1fr 1fr 44px;
+      align-items: start;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.15s ease;
+    }
+
+    .aw-set-row.active-set {
+      background: #161a24;
+    }
+
+    .aw-set-num {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      padding-top: 2px;
+    }
+
+    .aw-val-btn {
+      background: none;
+      border: none;
+      text-align: left;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .aw-set-row.active-set .aw-val-btn {
+      color: #3b82f6;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .aw-sub-hint {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .aw-check {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: none;
+      border: none;
+      color: #334155;
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      justify-self: end;
+    }
+
+    .aw-check.done {
+      color: #22c55e;
+    }
+
+    .aw-add-row {
+      display: grid;
+      grid-template-columns: 44px 1fr 1fr 64px;
+      align-items: center;
+      padding: 12px 16px;
+      color: #64748b;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* Bottom Dock inside Active Workout (IMG_8135 Blue Log Set vs IMG_8136 Green Rest Countdown) */
+    .aw-bottom-dock {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 460px;
+      background: #0b0d12;
+      padding: 8px 14px calc(var(--safe-bottom) + 10px);
+      z-index: 85;
+    }
+
+    .aw-rest-banner {
+      display: none;
+      height: 68px;
+      border-radius: 16px;
+      background: #141923;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .aw-rest-banner.visible {
+      display: flex;
+    }
+
+    .aw-rest-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: #3ca374;
+      width: 75%;
+      transition: width 0.35s linear;
+      z-index: 1;
+    }
+
+    .aw-rest-adj {
+      position: relative;
+      z-index: 2;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 6px;
+      cursor: pointer;
+    }
+
+    .aw-rest-center {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .aw-rest-digits {
+      font-size: 38px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .aw-rest-lbl {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .aw-action-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .aw-sq-icon-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #1c212c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .aw-main-cta {
+      flex: 1;
+      height: 48px;
+      border-radius: 14px;
+      background: #3b82f6;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .aw-main-cta.skip-mode {
+      background: #141923;
+      border: 1.5px solid #2563eb;
+      color: #3b82f6;
+    }
+
+    /* Post-Workout Share Card Modal (IMG_8138) */
+    .share-summary-card {
+      background: #171a23;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 16px;
+      margin: 10px 0 14px;
+    }
+
+    .share-card-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #3b82f6;
+      margin-bottom: 12px;
+    }
+
+    .share-card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 8px;
+    }
+
+    .share-ex-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .share-ex-line:last-child {
+      border-bottom: none;
+    }
+
     .toast-msg {
       position: fixed;
       top: calc(var(--safe-top) + 54px);
@@ -3507,6 +3946,122 @@
         <div class="gallery-grid" id="ddMediaGrid" style="display:none;"></div>
         <button class="compare-outline-btn" id="ddAddMediaBtn" style="width:100%;margin:0;">Add Progress Photo</button>
       </div>
+    </div>
+  </div>
+
+
+  <!-- FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER (IMG_8135, 8136, 8137) -->
+  <div class="active-workout-overlay" id="activeWorkoutOverlay">
+    <div class="aw-shell">
+      <div class="aw-hero" id="awHero">
+        <div class="aw-top-controls">
+          <div class="aw-top-left">
+            <button class="aw-round-btn" id="awCloseBtn" title="Minimize / Finish Workout">✕</button>
+            <div class="aw-compact-vitals">
+              <span>❤️ <span id="awCompactHr">115</span></span>
+              <span>🔥 <span id="awCompactKcal">17</span></span>
+            </div>
+          </div>
+          <div class="aw-top-right">
+            <button class="aw-round-btn" id="awStatsBtn" title="Exercise 1RM & History">📊</button>
+            <button class="aw-round-btn" id="awNextExBtn" title="Next Exercise">↻</button>
+            <button class="aw-round-btn" id="awMoreBtn" title="Workout Options">•••</button>
+          </div>
+        </div>
+
+        <img id="awHeroGif" src="" alt="Exercise Form" referrerpolicy="no-referrer" />
+
+        <div class="aw-vitals-pill">
+          <div>❤️ <span id="awHeroHr">-- bpm</span></div>
+          <div>🔥 <span id="awHeroKcal">-- kcal</span></div>
+        </div>
+      </div>
+
+      <!-- Segmented Exercise Progress Bar -->
+      <div class="aw-seg-bar" id="awSegBar"></div>
+
+      <!-- Exercise Title + Rest / Interval / 1RM Header -->
+      <div class="aw-ex-header">
+        <div class="aw-ex-title" id="awExTitle">Dumbbell Shoulder Press</div>
+        <div class="aw-sub-controls">
+          <div class="aw-chip-group">
+            <button class="aw-pill-chip" id="awRestPresetBtn">🕒 Rest <span class="blue" id="awRestPresetLbl">01:30</span></button>
+            <button class="aw-pill-chip" id="awIntervalBtn">⏱ Interval</button>
+          </div>
+          <div class="aw-1rm-tag">1RM: <strong id="aw1rmVal">6.33</strong></div>
+        </div>
+      </div>
+
+      <!-- Set / Kgs / Reps Table -->
+      <div class="aw-table-head">
+        <span>Set</span>
+        <span>Kgs</span>
+        <span>Reps ⓘ</span>
+        <span></span>
+      </div>
+
+      <div id="awSetsContainer"></div>
+
+      <div class="aw-add-row">
+        <button id="awAddSetBtn" style="background:none;border:none;color:#94a3b8;font-size:22px;font-weight:600;text-align:left;cursor:pointer;">+</button>
+        <span id="awNextWeightPreview">10</span>
+        <span id="awNextRepsPreview">8</span>
+        <button id="awDelSetBtn" style="background:none;border:none;color:#64748b;font-size:13px;font-weight:700;text-align:right;cursor:pointer;">Delete</button>
+      </div>
+
+      <!-- Bottom Dock: Green Rest Countdown + Log Set / Skip Rest Bar -->
+      <div class="aw-bottom-dock">
+        <div class="aw-rest-banner" id="awRestBanner">
+          <div class="aw-rest-fill" id="awRestFill"></div>
+          <button class="aw-rest-adj" id="awRestMinus15">-15s</button>
+          <div class="aw-rest-center">
+            <span class="aw-rest-digits" id="awRestDigits">01:08</span>
+            <span class="aw-rest-lbl">Rest</span>
+          </div>
+          <button class="aw-rest-adj" id="awRestPlus15">+15s</button>
+        </div>
+
+        <div class="aw-action-bar">
+          <button class="aw-sq-icon-btn" id="awNoteBtn" title="Exercise Note">📝</button>
+          <button class="aw-sq-icon-btn" id="awVoiceCoachBtn" title="Announce Next Set">✨</button>
+          <button class="aw-main-cta" id="awPrimaryActionBtn">Log Set</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST-WORKOUT SHARE CARD MODAL (IMG_8138) -->
+  <div class="modal-backdrop" id="shareWorkoutModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div>
+          <div style="font-size:17px;font-weight:800;">Pick card to share</div>
+          <div style="font-size:12px;color:#94a3b8;">Workout completed & saved to History</div>
+        </div>
+        <button class="close-btn" id="closeShareModal">✕</button>
+      </div>
+
+      <div class="share-summary-card">
+        <div class="share-card-title" id="scWorkoutTitle">Upper Body Workout</div>
+        <div class="share-card-stats">
+          <div>
+            <div style="font-size:11px;color:#94a3b8;">Duration</div>
+            <div style="font-size:18px;font-weight:800;color:#fff;" id="scDuration">00:48:01</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#94a3b8;">Volume</div>
+            <div style="font-size:18px;font-weight:800;color:#fff;" id="scVolume">1620 kgs</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#94a3b8;">Records</div>
+            <div style="font-size:18px;font-weight:800;color:#fff;" id="scRecords">2</div>
+          </div>
+        </div>
+        <div id="scExerciseList"></div>
+      </div>
+
+      <button class="primary-btn" style="width:100%;padding:14px;font-size:15px;" id="doneShareBtn">Done</button>
     </div>
   </div>
 
@@ -5075,39 +5630,432 @@
         restBar.classList.remove("visible");
       });
 
-      // Active Workout Session Timer
-      let sessionRunning = false;
-      let sessionSec = 0;
-      let sessionTimer = null;
-      const startBtn = document.getElementById("startWorkoutBtn");
+      // FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER + REST TIMER + VOICE ANNOUNCEMENTS (IMG_8135, 8136, 8137, 8138)
+      const awOverlay = document.getElementById("activeWorkoutOverlay");
+      const shareModal = document.getElementById("shareWorkoutModal");
+      let awSessionSec = 0;
+      let awSessionTick = null;
+      let awExList = [];
+      let awExIdx = 0;
+      let awRestTotal = 90;
+      let awRestLeft = 0;
+      let awRestTick = null;
+      let awHeartRate = 111;
+      let awCalories = 17;
 
-      startBtn.addEventListener("click", () => {
-        if (!sessionRunning) {
-          sessionRunning = true;
-          openDayDetailsTab();
-          state.expandedAll = true;
-          document.getElementById("expandAllBtn").textContent = "Collapse Sets";
-          renderDayWorkout();
-          startBtn.classList.add("running");
-          chimeSetDone();
-          speak(`Starting ${state.activeDay} workout. Let's focus on clean form.`);
-          sessionTimer = setInterval(() => {
-            sessionSec++;
-            startBtn.textContent = `■ End · ${formatSec(sessionSec)}`;
-          }, 1000);
-          startBtn.textContent = `■ End · 00:00`;
-        } else {
-          sessionRunning = false;
-          clearInterval(sessionTimer);
-          sessionSec = 0;
-          startBtn.classList.remove("running");
-          startBtn.textContent = "▶ Start Workout";
-          playTone(523.25, 0.14, "triangle", 0);
-          playTone(659.25, 0.14, "triangle", 0.14);
-          playTone(783.99, 0.25, "triangle", 0.28);
-          speak("Workout completed!");
-          showToast("Workout finished & saved in History!");
+      function getRestDurationForEx(ex) {
+        if (!ex) return 90;
+        if (ex.id === "briskWalk") return 0;
+        if (ex.rest === 120) return 90;
+        if (ex.rest === 90) return 90;
+        if (ex.id === "hammerCurl" || ex.id === "bicepCurl") return 75; // 1 min 15 secs
+        return 60; // 1 min
+      }
+
+      function getTargetRangeText(ex) {
+        if (!ex) return "Target 8-12";
+        if (ex.id === "briskWalk") return "Target 5.0 km";
+        if (ex.reps <= 8) return "Target 6-8";
+        if (ex.reps <= 10) return "Target 8-10";
+        return "Target 10-12";
+      }
+
+      function compute1RMDisplay(weightNum, reps) {
+        if (!weightNum || weightNum <= 0) return `${reps} reps`;
+        const rm = weightNum * (1 + reps / 30);
+        return rm.toFixed(2).replace(/\.00$/, "");
+      }
+
+      function announceCurrentTargetSet(prefixText) {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const ex = cur.ex;
+        const activeSetIdx = cur.sets.findIndex(s => !s.done);
+        const sObj = activeSetIdx >= 0 ? cur.sets[activeSetIdx] : cur.sets[cur.sets.length - 1];
+        const setNum = activeSetIdx >= 0 ? activeSetIdx + 1 : cur.sets.length;
+        const wText = ex.id === "briskWalk"
+          ? `${sObj.weightLabel}`
+          : (sObj.weightNum > 0 ? `${sObj.weightNum} kilograms per dumbbell` : "bodyweight");
+        const rText = ex.id === "briskWalk" ? `${sObj.reps} minutes` : `${sObj.reps} reps`;
+        const lead = prefixText ? `${prefixText}. ` : "";
+        speak(`${lead}${ex.name}, Set ${setNum}: ${rText} at ${wText}.`);
+      }
+
+      function stopAwRestTimer(announceNext) {
+        if (awRestTick) {
+          clearInterval(awRestTick);
+          awRestTick = null;
         }
+        awRestLeft = 0;
+        document.getElementById("awRestBanner").classList.remove("visible");
+        document.getElementById("awHero").classList.remove("collapsed");
+        const cta = document.getElementById("awPrimaryActionBtn");
+        cta.textContent = "Log Set";
+        cta.classList.remove("skip-mode");
+        if (announceNext) {
+          playTone(659.25, 0.14, "sine", 0);
+          playTone(880, 0.16, "sine", 0.14);
+          playTone(1046.5, 0.25, "sine", 0.28);
+          try { if (navigator.vibrate) navigator.vibrate([120, 80, 180]); } catch (e) {}
+          announceCurrentTargetSet("Rest complete. Next up");
+        }
+      }
+
+      function startAwRestTimer(seconds) {
+        if (!seconds || seconds <= 0) return;
+        if (awRestTick) clearInterval(awRestTick);
+        awRestTotal = seconds;
+        awRestLeft = seconds;
+
+        const banner = document.getElementById("awRestBanner");
+        const digits = document.getElementById("awRestDigits");
+        const fill = document.getElementById("awRestFill");
+        const cta = document.getElementById("awPrimaryActionBtn");
+
+        banner.classList.add("visible");
+        document.getElementById("awHero").classList.add("collapsed");
+        digits.textContent = formatSec(awRestLeft);
+        fill.style.width = "100%";
+        cta.textContent = "Skip rest";
+        cta.classList.add("skip-mode");
+
+        awRestTick = setInterval(() => {
+          awRestLeft--;
+          if (awRestLeft <= 3 && awRestLeft > 0) {
+            playTone(740, 0.08, "sine", 0);
+          }
+          if (awRestLeft <= 0) {
+            stopAwRestTimer(true);
+          } else {
+            digits.textContent = formatSec(awRestLeft);
+            const pct = Math.max(0, Math.min(100, (awRestLeft / awRestTotal) * 100));
+            fill.style.width = `${pct}%`;
+          }
+        }, 1000);
+      }
+
+      function renderActiveWorkoutPlayer() {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const ex = cur.ex;
+
+        // Segmented top progress bar
+        const segBar = document.getElementById("awSegBar");
+        segBar.innerHTML = awExList.map((item, i) => {
+          const allDone = item.sets.every(s => s.done);
+          const cls = ["aw-seg"];
+          if (allDone) cls.push("done");
+          else if (i === awExIdx) cls.push("active");
+          return `<div class="${cls.join(" ")}" data-aw-jump="${i}"></div>`;
+        }).join("");
+        segBar.querySelectorAll("[data-aw-jump]").forEach(el => {
+          el.addEventListener("click", () => {
+            awExIdx = parseInt(el.getAttribute("data-aw-jump"), 10);
+            renderActiveWorkoutPlayer();
+          });
+        });
+
+        // Hero GIF & Vitals
+        const heroImg = document.getElementById("awHeroGif");
+        heroImg.onerror = function () { this.onerror = null; this.src = FALLBACK_SVG; };
+        heroImg.src = ex.gif;
+        document.getElementById("awHeroHr").textContent = `${awHeartRate} bpm`;
+        document.getElementById("awHeroKcal").textContent = `${awCalories} kcal`;
+        document.getElementById("awCompactHr").textContent = awHeartRate;
+        document.getElementById("awCompactKcal").textContent = awCalories;
+
+        // Title, Rest preset chip, and 1RM
+        document.getElementById("awExTitle").textContent = ex.name;
+        const restSec = getRestDurationForEx(ex);
+        document.getElementById("awRestPresetLbl").textContent = formatSec(restSec);
+
+        const firstSet = cur.sets[0] || { weightNum: 5, reps: 8 };
+        document.getElementById("aw1rmVal").textContent = compute1RMDisplay(firstSet.weightNum, firstSet.reps);
+
+        // Find first incomplete set to highlight in blue
+        const activeSetIdx = cur.sets.findIndex(s => !s.done);
+        const setsBox = document.getElementById("awSetsContainer");
+        setsBox.innerHTML = cur.sets.map((s, sIdx) => {
+          const isCurrent = sIdx === activeSetIdx;
+          const weightDisplay = ex.id === "briskWalk" ? s.weightLabel : s.weightNum;
+          const subWeight = ex.id === "briskWalk" ? "Distance" : (s.weightNum > 0 ? "Per DB" : "Bodyweight");
+          const subReps = isCurrent ? getTargetRangeText(ex) : "";
+
+          return `<div class="aw-set-row ${isCurrent ? "active-set" : ""}">
+            <div class="aw-set-num">${sIdx + 1}</div>
+            <div>
+              <button class="aw-val-btn" data-aw-edit-w="${sIdx}">${weightDisplay}</button>
+              ${isCurrent ? `<div class="aw-sub-hint">${subWeight}</div>` : ""}
+            </div>
+            <div>
+              <button class="aw-val-btn" data-aw-edit-r="${sIdx}">${s.reps}</button>
+              ${subReps ? `<div class="aw-sub-hint">${subReps}</div>` : ""}
+            </div>
+            <button class="aw-check ${s.done ? "done" : ""}" data-aw-check="${sIdx}">✓</button>
+          </div>`;
+        }).join("");
+
+        const lastSet = cur.sets[cur.sets.length - 1] || { weightNum: 5, reps: 8 };
+        document.getElementById("awNextWeightPreview").textContent = ex.id === "briskWalk" ? lastSet.weightLabel : (lastSet.weightNum > 0 ? lastSet.weightNum * 2 : 0);
+        document.getElementById("awNextRepsPreview").textContent = lastSet.reps;
+
+        // Bind inline weight / reps editors & set checkmarks
+        setsBox.querySelectorAll("[data-aw-edit-w]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const sIdx = parseInt(btn.getAttribute("data-aw-edit-w"), 10);
+            const curS = cur.sets[sIdx];
+            if (ex.id === "briskWalk") {
+              const opts = ["3.0 km", "4.0 km", "5.0 km", "6.0 km"];
+              const next = opts[(opts.indexOf(curS.weightLabel) + 1) % opts.length];
+              curS.weightLabel = next;
+              curS.weightNum = parseFloat(next);
+            } else {
+              const weights = [0, 2.5, 5, 7.5, 10, 12.5, 15];
+              const nextW = weights[(weights.indexOf(curS.weightNum) + 1) % weights.length];
+              curS.weightNum = nextW;
+              curS.weightLabel = nextW === 0 ? "Bodyweight" : `${nextW} kg`;
+            }
+            renderActiveWorkoutPlayer();
+          });
+        });
+
+        setsBox.querySelectorAll("[data-aw-edit-r]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const sIdx = parseInt(btn.getAttribute("data-aw-edit-r"), 10);
+            const raw = prompt(`Enter reps for Set ${sIdx + 1}:`, cur.sets[sIdx].reps);
+            const val = parseInt(raw, 10);
+            if (val && val > 0) {
+              cur.sets[sIdx].reps = val;
+              renderActiveWorkoutPlayer();
+            }
+          });
+        });
+
+        setsBox.querySelectorAll("[data-aw-check]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const sIdx = parseInt(btn.getAttribute("data-aw-check"), 10);
+            completeAwSet(sIdx);
+          });
+        });
+      }
+
+      function completeAwSet(sIdx) {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const ex = cur.ex;
+        const sObj = cur.sets[sIdx];
+        if (!sObj) return;
+
+        sObj.done = true;
+        chimeSetDone();
+        awHeartRate = Math.min(148, awHeartRate + 2);
+        awCalories += 9;
+
+        // Sync to main state & dated history
+        const wKey = `${state.activePlanId}_${state.activeDay}_${ex.id}_${cur.planIdx}`;
+        const setKey = `${wKey}_s${sIdx + 1}`;
+        state.weights[wKey] = sObj.weightLabel;
+        state.customReps[setKey] = sObj.reps;
+        state.completedSets[setKey] = true;
+        syncExerciseToHistory(state.activeDay, ex.id, cur.planIdx);
+        renderDayWorkout();
+
+        const nextUndoneIdx = cur.sets.findIndex(s => !s.done);
+        const restSec = getRestDurationForEx(ex);
+
+        if (nextUndoneIdx >= 0) {
+          renderActiveWorkoutPlayer();
+          if (restSec > 0) startAwRestTimer(restSec);
+        } else if (awExIdx < awExList.length - 1) {
+          // Advance to next exercise in workout and start rest timer
+          awExIdx++;
+          renderActiveWorkoutPlayer();
+          const nextRest = getRestDurationForEx(awExList[awExIdx].ex);
+          if (nextRest > 0) startAwRestTimer(nextRest);
+        } else {
+          // Final set of final exercise completed -> Finish workout & show share summary card (IMG_8138)
+          renderActiveWorkoutPlayer();
+          finishActiveWorkoutSession();
+        }
+      }
+
+      function openActiveWorkoutPlayer() {
+        const day = state.activeDay;
+        const ids = getDayExerciseIds(day);
+        if (ids.length === 0) {
+          showToast("Today is a Rest day! Pick Mon, Wed, or Fri to start lifting.");
+          return;
+        }
+
+        awExList = ids.map((exId, idx) => {
+          const ex = EXERCISES[exId] || { id: exId, name: exId, sets: 3, reps: 10, defaultWeight: "5 kg", rest: 90, gif: FALLBACK_SVG };
+          const wKey = `${state.activePlanId}_${day}_${exId}_${idx}`;
+          const savedW = state.weights[wKey] || ex.defaultWeight;
+          const numW = parseFloat(savedW) || 0;
+          const sets = [];
+          for (let s = 1; s <= ex.sets; s++) {
+            const setKey = `${wKey}_s${s}`;
+            sets.push({
+              weightNum: numW,
+              weightLabel: savedW,
+              reps: state.customReps[setKey] || ex.reps,
+              done: !!state.completedSets[setKey]
+            });
+          }
+          return { ex, planIdx: idx, sets };
+        });
+
+        awExIdx = awExList.findIndex(item => item.sets.some(s => !s.done));
+        if (awExIdx < 0) awExIdx = 0;
+
+        awSessionSec = 0;
+        awHeartRate = 111;
+        awCalories = 17;
+        if (awSessionTick) clearInterval(awSessionTick);
+        awSessionTick = setInterval(() => {
+          awSessionSec++;
+        }, 1000);
+
+        stopAwRestTimer(false);
+        renderActiveWorkoutPlayer();
+        awOverlay.classList.add("open");
+        chimeSetDone();
+        announceCurrentTargetSet(`Starting ${day} workout`);
+      }
+
+      function finishActiveWorkoutSession() {
+        if (awSessionTick) clearInterval(awSessionTick);
+        stopAwRestTimer(false);
+        awOverlay.classList.remove("open");
+
+        const hrs = Math.floor(awSessionSec / 3600);
+        const mins = Math.floor((awSessionSec % 3600) / 60);
+        const secs = awSessionSec % 60;
+        const durFormatted = `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+        let totalVol = 0;
+        let completedExCount = 0;
+        const rowsHtml = awExList.map(item => {
+          const doneSets = item.sets.filter(s => s.done);
+          if (doneSets.length > 0) completedExCount++;
+          doneSets.forEach(s => {
+            if (item.ex.id !== "briskWalk") {
+              totalVol += Math.round((s.weightNum || 0) * 2 * (s.reps || 0));
+            }
+          });
+          return `<div class="share-ex-line">
+            <span>${item.ex.name}</span>
+            <span style="color:#3b82f6;font-weight:800;">${item.sets.length}x</span>
+          </div>`;
+        }).join("");
+
+        const planTitle = getDayPlan(state.activeDay).fullTitle;
+        document.getElementById("scWorkoutTitle").textContent = planTitle;
+        document.getElementById("scDuration").textContent = durFormatted;
+        document.getElementById("scVolume").textContent = `${totalVol} kgs`;
+        document.getElementById("scRecords").textContent = Math.max(1, Math.min(3, completedExCount));
+        document.getElementById("scExerciseList").innerHTML = rowsHtml;
+
+        playTone(523.25, 0.14, "triangle", 0);
+        playTone(659.25, 0.14, "triangle", 0.14);
+        playTone(783.99, 0.25, "triangle", 0.28);
+        speak("Workout completed! Great job.");
+        shareModal.classList.add("open");
+      }
+
+      document.getElementById("startWorkoutBtn").addEventListener("click", openActiveWorkoutPlayer);
+
+      document.getElementById("awPrimaryActionBtn").addEventListener("click", () => {
+        if (awRestLeft > 0) {
+          stopAwRestTimer(true);
+        } else {
+          const cur = awExList[awExIdx];
+          if (!cur) return;
+          const nextIdx = cur.sets.findIndex(s => !s.done);
+          completeAwSet(nextIdx >= 0 ? nextIdx : cur.sets.length - 1);
+        }
+      });
+
+      document.getElementById("awRestMinus15").addEventListener("click", () => {
+        awRestLeft = Math.max(1, awRestLeft - 15);
+        document.getElementById("awRestDigits").textContent = formatSec(awRestLeft);
+      });
+
+      document.getElementById("awRestPlus15").addEventListener("click", () => {
+        awRestLeft += 15;
+        awRestTotal = Math.max(awRestTotal, awRestLeft);
+        document.getElementById("awRestDigits").textContent = formatSec(awRestLeft);
+      });
+
+      document.getElementById("awRestPresetBtn").addEventListener("click", () => {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const options = [60, 75, 90, 120];
+        const currentRest = getRestDurationForEx(cur.ex);
+        const nextRest = options[(options.indexOf(currentRest) + 1) % options.length];
+        cur.ex.rest = nextRest;
+        document.getElementById("awRestPresetLbl").textContent = formatSec(nextRest);
+        showToast(`Rest timer set to ${formatSec(nextRest)}`);
+      });
+
+      document.getElementById("awAddSetBtn").addEventListener("click", () => {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const last = cur.sets[cur.sets.length - 1] || { weightNum: 5, weightLabel: "5 kg", reps: 8 };
+        cur.sets.push({ weightNum: last.weightNum, weightLabel: last.weightLabel, reps: last.reps, done: false });
+        renderActiveWorkoutPlayer();
+      });
+
+      document.getElementById("awDelSetBtn").addEventListener("click", () => {
+        const cur = awExList[awExIdx];
+        if (!cur || cur.sets.length <= 1) return;
+        cur.sets.pop();
+        renderActiveWorkoutPlayer();
+      });
+
+      document.getElementById("awNextExBtn").addEventListener("click", () => {
+        if (awExList.length <= 1) return;
+        awExIdx = (awExIdx + 1) % awExList.length;
+        stopAwRestTimer(false);
+        renderActiveWorkoutPlayer();
+        announceCurrentTargetSet("Switched to");
+      });
+
+      document.getElementById("awStatsBtn").addEventListener("click", () => {
+        const cur = awExList[awExIdx];
+        if (cur) openFormModal(cur.ex.id);
+      });
+
+      document.getElementById("awNoteBtn").addEventListener("click", () => {
+        const cur = awExList[awExIdx];
+        if (!cur) return;
+        const note = prompt(`Form note for ${cur.ex.name}:`, state.notes[cur.ex.id] || "");
+        if (note !== null) {
+          state.notes[cur.ex.id] = note.trim();
+          saveState();
+          showToast("Note saved!");
+        }
+      });
+
+      document.getElementById("awVoiceCoachBtn").addEventListener("click", () => {
+        announceCurrentTargetSet("Current target");
+      });
+
+      document.getElementById("awCloseBtn").addEventListener("click", () => {
+        const anyDone = awExList.some(item => item.sets.some(s => s.done));
+        if (anyDone) {
+          finishActiveWorkoutSession();
+        } else {
+          if (awSessionTick) clearInterval(awSessionTick);
+          stopAwRestTimer(false);
+          awOverlay.classList.remove("open");
+        }
+      });
+
+      document.getElementById("closeShareModal").addEventListener("click", () => shareModal.classList.remove("open"));
+      document.getElementById("doneShareBtn").addEventListener("click", () => {
+        shareModal.classList.remove("open");
+        showToast("✓ Workout saved to Progress & Calendar!");
       });
 
       // Form Modal
