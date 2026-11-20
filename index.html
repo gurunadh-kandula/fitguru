@@ -2291,6 +2291,259 @@
       color: #f43f5e;
     }
 
+
+    /* JEFIT DAY LOG DETAIL SCREEN (IMG_8148, 8149, 8150) */
+    .day-detail-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 65;
+      background: var(--bg);
+      display: none;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .day-detail-overlay.open {
+      display: flex;
+    }
+
+    .dd-shell {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      background: var(--bg);
+      padding-top: calc(var(--safe-top) + 6px);
+      padding-bottom: calc(var(--safe-bottom) + 40px);
+    }
+
+    .dd-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(11, 13, 18, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .dd-back-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dd-back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1b202b;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .dd-date-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.2px;
+    }
+
+    .dd-add-ex-btn {
+      background: #1b2230;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #3b82f6;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      padding: 8px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+    }
+
+    .dd-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 16px;
+      margin-bottom: 14px;
+    }
+
+    .dd-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 8px 4px 10px;
+      cursor: pointer;
+      position: relative;
+      text-align: center;
+    }
+
+    .dd-tab.active {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .dd-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: -1px;
+      height: 2.5px;
+      border-radius: 99px;
+      background: #fff;
+    }
+
+    .dd-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .dd-time-pill {
+      display: inline-block;
+      background: #1d212b;
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 7px;
+    }
+
+    .dd-dur-big {
+      padding: 6px 16px 4px;
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.8px;
+    }
+
+    .dd-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 6px 16px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .dd-metric-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .dd-metric-lbl {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .dd-sec-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 12px;
+    }
+
+    .dd-ex-card {
+      padding: 12px 16px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dd-ex-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dd-ex-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .dd-ex-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      background: #232836;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .dd-ex-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dd-chart-badge {
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      background: #111827;
+      color: #3b82f6;
+      font-size: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dd-ex-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .dd-set-grid-head {
+      display: grid;
+      grid-template-columns: 38px 1fr 72px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      padding-bottom: 8px;
+    }
+
+    .dd-set-line {
+      display: grid;
+      grid-template-columns: 38px 1fr 72px;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .dd-1rm-val {
+      text-align: right;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .dd-1rm-val.pr {
+      color: #3b82f6;
+    }
+
     .toast-msg {
       position: fixed;
       top: calc(var(--safe-top) + 54px);
@@ -3201,6 +3454,62 @@
     </div>
   </div>
 
+
+  <!-- FULL-SCREEN DAY LOG DETAIL VIEW (IMG_8148, 8149, 8150) -->
+  <div class="day-detail-overlay" id="dayDetailOverlay">
+    <div class="dd-shell">
+      <div class="dd-topbar">
+        <div class="dd-back-group">
+          <button class="dd-back-btn" id="ddCloseBtn" title="Back to Progress">‹</button>
+          <div class="dd-date-title" id="ddDateTitle">Nov 18, 2026</div>
+        </div>
+        <button class="dd-add-ex-btn" id="ddAddExerciseBtn">+ EXERCISE</button>
+      </div>
+
+      <div class="dd-tabs">
+        <button class="dd-tab active" data-ddtab="logs" id="ddTabLogs">Logs</button>
+        <button class="dd-tab" data-ddtab="bodystats" id="ddTabBodyStats">Body Stats</button>
+        <button class="dd-tab" data-ddtab="media" id="ddTabMedia">Media</button>
+      </div>
+
+      <!-- 1. LOGS PANE -->
+      <div id="ddPaneLogs">
+        <div id="ddSessionContent"></div>
+      </div>
+
+      <!-- 2. BODY STATS PANE -->
+      <div id="ddPaneBodyStats" style="display:none;padding:0 16px;">
+        <div class="bstat-subcard" id="ddWeightCard">
+          <div class="bstat-sub-title">Weight</div>
+          <div class="bstat-sub-row">
+            <div>
+              <div class="bstat-big"><strong id="ddWeightVal">76.0</strong> <span>kgs</span></div>
+              <div class="bstat-date" id="ddWeightDate">Nov 18, 2026</div>
+            </div>
+            <span style="color:#3b82f6;font-size:13px;font-weight:700;">Edit ›</span>
+          </div>
+        </div>
+        <div class="bstat-subcard" id="ddBfCard">
+          <div class="bstat-sub-title">Body Fat</div>
+          <div class="bstat-sub-row">
+            <div>
+              <div class="bstat-big" id="ddBfVal">- <span>%</span></div>
+              <div class="bstat-date">Tap to log body fat %</div>
+            </div>
+            <span style="color:#3b82f6;font-size:13px;font-weight:700;">Edit ›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. MEDIA PANE -->
+      <div id="ddPaneMedia" style="display:none;padding:0 16px;">
+        <div style="font-size:13px;color:#94a3b8;margin-bottom:12px;" id="ddMediaStatus">Progress photos attached to your log</div>
+        <div class="gallery-grid" id="ddMediaGrid" style="display:none;"></div>
+        <button class="compare-outline-btn" id="ddAddMediaBtn" style="width:100%;margin:0;">Add Progress Photo</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Form & Tempo Inspector Modal -->
   <div class="modal-backdrop" id="formModal">
     <div class="modal-sheet">
@@ -3600,6 +3909,26 @@
             "Pause for 1 full second on the floor (no bouncing), then press weights back up together."
           ],
           mistake: "Bouncing elbows off the floor—the 1-second dead stop builds raw pushing power."
+        },
+        uprightRow: {
+          id: "uprightRow",
+          name: "Dumbbell Upright Row",
+          muscle: "Shoulders",
+          target: "Side Delts & Upper Traps",
+          sets: 3,
+          reps: 12,
+          defaultWeight: "5 kg",
+          rest: 60,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/43.gif",
+          photo: "https://cdn.jefit.com/assets/img/exercises/gifs/43.gif",
+          topCue: "Lead With Elbows · Chest Level",
+          bottomCue: "3s Controlled Descent",
+          cues: [
+            "Stand tall holding dumbbells in front of your thighs with palms facing your body.",
+            "Pull the dumbbells straight up along your torso by leading with your elbows until upper arms are parallel to the floor.",
+            "Pause briefly at chest height and lower smoothly over 3 seconds."
+          ],
+          mistake: "Pulling elbows higher than shoulder level or shrugging shoulders into your ears."
         },
         shoulderPress: {
           id: "shoulderPress",
@@ -5454,10 +5783,457 @@
         });
       });
 
+      // Pre-populated & dynamic daily workout logs for November 2026 calendar tap (IMG_8148, 8149, 8150)
+      const SEEDED_DAY_LOGS = {
+        "2026-11-18": {
+          dateTitle: "Nov 18, 2026",
+          startedAt: "started at 6:12pm",
+          duration: "48m",
+          volumeKg: 1620,
+          calories: 325,
+          avgHr: 125,
+          records: 2,
+          frontHighlight: "upper",
+          backHighlight: "upper",
+          exercises: [
+            {
+              exId: "shoulderPress",
+              name: "Dumbbell Shoulder Press",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 8, oneRm: "6.33kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 8, oneRm: "6.33kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 8, oneRm: "6.33kgs", pr: false }
+              ]
+            },
+            {
+              exId: "uprightRow",
+              name: "Dumbbell Upright Row",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            },
+            {
+              exId: "tricepExt",
+              name: "Dumbbell Tricep Extension",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            },
+            {
+              exId: "hammerCurl",
+              name: "Dumbbell Hammer Curl",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            },
+            {
+              exId: "lateralRaise",
+              name: "Dumbbell Lateral Raise",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 4, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            }
+          ]
+        },
+        "2026-11-16": {
+          dateTitle: "Nov 16, 2026",
+          startedAt: "started at 6:30pm",
+          duration: "43m",
+          volumeKg: 1412,
+          calories: 290,
+          avgHr: 121,
+          records: 1,
+          frontHighlight: "upper",
+          backHighlight: "back",
+          exercises: [
+            {
+              exId: "deadlift",
+              name: "Dumbbell Deadlift",
+              sets: [
+                { set: 1, weight: "10 kgs", reps: 8, oneRm: "12.7kgs", pr: true },
+                { set: 2, weight: "10 kgs", reps: 8, oneRm: "12.7kgs", pr: false },
+                { set: 3, weight: "10 kgs", reps: 8, oneRm: "12.7kgs", pr: false },
+                { set: 4, weight: "10 kgs", reps: 8, oneRm: "12.7kgs", pr: false }
+              ]
+            },
+            {
+              exId: "row",
+              name: "Dumbbell Bent-Over Row",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 10, oneRm: "6.7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 10, oneRm: "6.7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 10, oneRm: "6.7kgs", pr: false }
+              ]
+            },
+            {
+              exId: "bicepCurl",
+              name: "Dumbbell Alternating Bicep Curl",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            }
+          ]
+        },
+        "2026-11-12": {
+          dateTitle: "Nov 12, 2026",
+          startedAt: "started at 6:45am",
+          duration: "50m",
+          volumeKg: 0,
+          calories: 310,
+          avgHr: 118,
+          records: 1,
+          frontHighlight: "legs",
+          backHighlight: "legs",
+          exercises: [
+            {
+              exId: "briskWalk",
+              name: "5 km Outdoor Walk",
+              sets: [
+                { set: 1, weight: "5.0 km", reps: 50, oneRm: "10:00/km", pr: true }
+              ]
+            }
+          ]
+        },
+        "2026-11-11": {
+          dateTitle: "Nov 11, 2026",
+          startedAt: "started at 6:15pm",
+          duration: "44m",
+          volumeKg: 1180,
+          calories: 275,
+          avgHr: 120,
+          records: 2,
+          frontHighlight: "upper",
+          backHighlight: "upper",
+          exercises: [
+            {
+              exId: "kneePushup",
+              name: "Knee Push-Ups",
+              sets: [
+                { set: 1, weight: "Bodyweight", reps: 8, oneRm: "8 reps", pr: true },
+                { set: 2, weight: "Bodyweight", reps: 8, oneRm: "8 reps", pr: false },
+                { set: 3, weight: "Bodyweight", reps: 8, oneRm: "8 reps", pr: false }
+              ]
+            },
+            {
+              exId: "floorPress",
+              name: "Dumbbell Floor Press",
+              sets: [
+                { set: 1, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: true },
+                { set: 2, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 3, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false },
+                { set: 4, weight: "5 kgs", reps: 12, oneRm: "7kgs", pr: false }
+              ]
+            }
+          ]
+        }
+      };
+
+      const ddOverlay = document.getElementById("dayDetailOverlay");
+      let activeDetailIso = "2026-11-18";
+
+      function buildDayLogBodySVG(mode) {
+        const upperBlue = (mode === "upper" || mode === "all") ? "#2c529e" : "#9ca3af";
+        const shoulderLight = (mode === "upper" || mode === "all") ? "#60a5fa" : "#9ca3af";
+        const backBlue = (mode === "upper" || mode === "back" || mode === "all") ? "#2c529e" : "#9ca3af";
+        const legsBlue = (mode === "legs" || mode === "all") ? "#2c529e" : "#9ca3af";
+
+        return `<svg width="264" height="270" viewBox="0 0 264 270" fill="none">
+          <!-- FRONT -->
+          <g transform="translate(12, 4)">
+            <ellipse cx="52" cy="20" rx="11" ry="14" fill="#323746"/>
+            <path d="M44 32H60L63 42H41L44 32Z" fill="#323746"/>
+            <path d="M41 40L25 46L21 58L31 61L35 48H69L73 61L83 58L79 46L63 40H41Z" fill="${shoulderLight}"/>
+            <path d="M35 49H51V66L37 64L35 49Z" fill="${upperBlue}"/>
+            <path d="M53 49H69L67 64L53 66V49Z" fill="${upperBlue}"/>
+            <path d="M21 60L17 85L25 87L30 63L21 60Z" fill="${upperBlue}"/>
+            <path d="M83 60L87 85L79 87L74 63L83 60Z" fill="${upperBlue}"/>
+            <path d="M17 88L12 116L19 118L25 90L17 88Z" fill="${upperBlue}"/>
+            <path d="M87 88L92 116L85 118L79 90L87 88Z" fill="${upperBlue}"/>
+            <ellipse cx="13" cy="127" rx="4.5" ry="9" fill="#323746"/>
+            <ellipse cx="91" cy="127" rx="4.5" ry="9" fill="#323746"/>
+            <rect x="42" y="68" width="9" height="8" rx="1.5" fill="${upperBlue}"/>
+            <rect x="53" y="68" width="9" height="8" rx="1.5" fill="${upperBlue}"/>
+            <rect x="42" y="78" width="9" height="8" rx="1.5" fill="${upperBlue}"/>
+            <rect x="53" y="78" width="9" height="8" rx="1.5" fill="${upperBlue}"/>
+            <rect x="43" y="88" width="8" height="9" rx="1.5" fill="${upperBlue}"/>
+            <rect x="53" y="88" width="8" height="9" rx="1.5" fill="${upperBlue}"/>
+            <path d="M36 66L40 68V97L35 94L36 66Z" fill="${upperBlue}"/>
+            <path d="M68 66L64 68V97L69 94L68 66Z" fill="${upperBlue}"/>
+            <path d="M36 99H68L65 114L52 122L39 114L36 99Z" fill="${upperBlue}"/>
+            <path d="M34 114L49 123L47 174H35L31 142L34 114Z" fill="${legsBlue}"/>
+            <path d="M70 114L55 123L57 174H69L73 142L70 114Z" fill="${legsBlue}"/>
+            <ellipse cx="41" cy="181" rx="6" ry="6" fill="#323746"/>
+            <ellipse cx="63" cy="181" rx="6" ry="6" fill="#323746"/>
+            <path d="M34 189H47L45 238H37L34 189Z" fill="${legsBlue}"/>
+            <path d="M57 189H70L67 238H59L57 189Z" fill="${legsBlue}"/>
+            <path d="M36 240H45L47 256H31L36 240Z" fill="#323746"/>
+            <path d="M59 240H68L73 256H57L59 240Z" fill="#323746"/>
+          </g>
+          <!-- BACK -->
+          <g transform="translate(148, 4)">
+            <ellipse cx="52" cy="20" rx="11" ry="14" fill="#323746"/>
+            <path d="M44 32H60L63 42H41L44 32Z" fill="${backBlue}"/>
+            <path d="M38 41L52 36L66 41L79 47L73 62L67 86L52 93L37 86L31 62L25 47L38 41Z" fill="${backBlue}"/>
+            <path d="M41 40L25 46L21 58L31 61L35 48H69L73 61L83 58L79 46L63 40H41Z" fill="${shoulderLight}"/>
+            <path d="M44 88L52 94L60 88L58 106H46L44 88Z" fill="#323746"/>
+            <path d="M21 60L17 85L25 87L30 63L21 60Z" fill="${upperBlue}"/>
+            <path d="M83 60L87 85L79 87L74 63L83 60Z" fill="${upperBlue}"/>
+            <path d="M17 88L12 116L19 118L25 90L17 88Z" fill="${upperBlue}"/>
+            <path d="M87 88L92 116L85 118L79 90L87 88Z" fill="${upperBlue}"/>
+            <ellipse cx="13" cy="127" rx="4.5" ry="9" fill="#323746"/>
+            <ellipse cx="91" cy="127" rx="4.5" ry="9" fill="#323746"/>
+            <path d="M36 106H51V128L37 125L36 106Z" fill="${legsBlue}"/>
+            <path d="M53 106H68L67 125L53 128V106Z" fill="${legsBlue}"/>
+            <path d="M35 128L49 130L47 176H35L32 148L35 128Z" fill="${legsBlue}"/>
+            <path d="M69 128L55 130L57 176H69L72 148L69 128Z" fill="${legsBlue}"/>
+            <rect x="36" y="178" width="11" height="8" rx="3" fill="#323746"/>
+            <rect x="57" y="178" width="11" height="8" rx="3" fill="#323746"/>
+            <path d="M34 188H47L45 224H37L34 188Z" fill="${legsBlue}"/>
+            <path d="M57 188H70L67 224H59L57 188Z" fill="${legsBlue}"/>
+            <path d="M37 225H44L46 256H33L37 225Z" fill="#323746"/>
+            <path d="M60 225H67L71 256H58L60 225Z" fill="#323746"/>
+          </g>
+        </svg>`;
+      }
+
+      function switchDayDetailTab(tab) {
+        document.querySelectorAll(".dd-tab").forEach(b => b.classList.remove("active"));
+        document.getElementById("ddPaneLogs").style.display = "none";
+        document.getElementById("ddPaneBodyStats").style.display = "none";
+        document.getElementById("ddPaneMedia").style.display = "none";
+
+        if (tab === "bodystats") {
+          document.getElementById("ddTabBodyStats").classList.add("active");
+          document.getElementById("ddPaneBodyStats").style.display = "block";
+        } else if (tab === "media") {
+          document.getElementById("ddTabMedia").classList.add("active");
+          document.getElementById("ddPaneMedia").style.display = "block";
+        } else {
+          document.getElementById("ddTabLogs").classList.add("active");
+          document.getElementById("ddPaneLogs").style.display = "block";
+        }
+      }
+
+      document.querySelectorAll("[data-ddtab]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          playTone(460, 0.05, "sine", 0);
+          switchDayDetailTab(btn.getAttribute("data-ddtab"));
+        });
+      });
+
+      function getLogDataForDate(dayNum) {
+        const iso = `2026-11-${String(dayNum).padStart(2, "0")}`;
+        const dateTitle = `Nov ${dayNum}, 2026`;
+
+        // Check if user logged sets dynamically in state.historyLog on this date
+        const userEntries = state.historyLog.filter(item => item.autoKey && item.autoKey.startsWith(iso));
+        if (userEntries.length > 0) {
+          let totalVol = 0;
+          const exBlocks = userEntries.map(entry => {
+            totalVol += entry.volKg || 0;
+            const namePart = entry.summary.split(":")[0].trim();
+            const matchedEx = Object.values(EXERCISES).find(e => e.name === namePart) || EXERCISES.shoulderPress;
+            const setsArr = [];
+            for (let s = 1; s <= matchedEx.sets; s++) {
+              const w = matchedEx.defaultWeight || "5 kg";
+              const numW = parseFloat(w) || 5;
+              const oneRmVal = matchedEx.id === "briskWalk" ? "10:00/km" : `${(numW * (1 + matchedEx.reps / 30)).toFixed(2).replace(/\.00$/, "")}kgs`;
+              setsArr.push({
+                set: s,
+                weight: matchedEx.id === "briskWalk" ? w : `${numW} kgs`,
+                reps: matchedEx.reps,
+                oneRm: oneRmVal,
+                pr: s === 1
+              });
+            }
+            return { exId: matchedEx.id, name: matchedEx.name, sets: setsArr };
+          });
+
+          return {
+            dateTitle,
+            startedAt: "started at 6:15pm",
+            duration: `${Math.max(15, exBlocks.length * 10)}m`,
+            volumeKg: totalVol,
+            calories: Math.max(95, exBlocks.length * 65),
+            avgHr: 122,
+            records: exBlocks.length,
+            frontHighlight: "upper",
+            exercises: exBlocks
+          };
+        }
+
+        if (SEEDED_DAY_LOGS[iso]) {
+          return SEEDED_DAY_LOGS[iso];
+        }
+
+        return {
+          dateTitle,
+          startedAt: "Rest / Scheduled Day",
+          duration: "0m",
+          volumeKg: 0,
+          calories: 0,
+          avgHr: 0,
+          records: 0,
+          frontHighlight: "none",
+          exercises: []
+        };
+      }
+
+      function openDayDetailScreen(dayNum) {
+        activeDetailIso = `2026-11-${String(dayNum).padStart(2, "0")}`;
+        const data = getLogDataForDate(dayNum);
+        document.getElementById("ddDateTitle").textContent = data.dateTitle;
+        switchDayDetailTab("logs");
+
+        // Sync Body Stats pane inside Day Detail
+        const bs = state.bodyStats || { weightKg: 76.0, bodyFatPct: null };
+        document.getElementById("ddWeightVal").textContent = (parseFloat(bs.weightKg) || 76.0).toFixed(1);
+        document.getElementById("ddWeightDate").textContent = data.dateTitle;
+        document.getElementById("ddBfVal").innerHTML = (bs.bodyFatPct !== null && bs.bodyFatPct !== undefined)
+          ? `<strong>${parseFloat(bs.bodyFatPct).toFixed(1)}</strong> <span>%</span>`
+          : `- <span>%</span>`;
+
+        // Sync Media pane inside Day Detail
+        const mStatus = document.getElementById("ddMediaStatus");
+        const mGrid = document.getElementById("ddMediaGrid");
+        if (state.progressPhotos && state.progressPhotos.length > 0) {
+          mStatus.style.display = "none";
+          mGrid.style.display = "grid";
+          mGrid.innerHTML = state.progressPhotos.map(p => `
+            <div class="gallery-item">
+              <img src="${p.src}" alt="Progress ${p.date}" />
+              <div class="gallery-date-tag">${p.date}</div>
+            </div>`).join("");
+        } else {
+          mStatus.style.display = "block";
+          mGrid.style.display = "none";
+        }
+
+        const contentEl = document.getElementById("ddSessionContent");
+        if (data.exercises.length === 0) {
+          contentEl.innerHTML = `
+            <div class="dd-meta-row">
+              <span class="dd-time-pill">${data.startedAt}</span>
+            </div>
+            <div class="dd-dur-big">0m</div>
+            <div class="dd-metrics-row">
+              <div><div class="dd-metric-val">0</div><div class="dd-metric-lbl">Volume (kg)</div></div>
+              <div><div class="dd-metric-val">0</div><div class="dd-metric-lbl">Calories</div></div>
+              <div><div class="dd-metric-val">-</div><div class="dd-metric-lbl">Avg. HR</div></div>
+            </div>
+            <div class="panel-card" style="margin-top:16px;">
+              <div class="panel-title">No Exercises Logged on ${data.dateTitle}</div>
+              <div class="panel-sub">Tap <strong>+ EXERCISE</strong> in the top right to log a session for this date, or check off your workout in the <strong>Workout</strong> tab.</div>
+            </div>`;
+        } else {
+          const exCardsHtml = data.exercises.map(item => {
+            const exObj = EXERCISES[item.exId] || { gif: FALLBACK_SVG };
+            const setsLines = item.sets.map(st => {
+              const weightReps = item.exId === "briskWalk"
+                ? `${st.weight} · ${st.reps} mins`
+                : `${st.weight} x ${st.reps}`;
+              return `<div class="dd-set-line">
+                <span>${st.set}</span>
+                <span>${weightReps}</span>
+                <span class="dd-1rm-val ${st.pr ? "pr" : ""}">${st.oneRm}</span>
+              </div>`;
+            }).join("");
+
+            return `<div class="dd-ex-card">
+              <div class="dd-ex-top">
+                <div class="dd-ex-left" data-dd-open-ex="${item.exId}">
+                  <div class="dd-ex-thumb">
+                    <img src="${exObj.gif}" alt="${item.name}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_SVG}'" />
+                    <div class="dd-chart-badge">📊</div>
+                  </div>
+                  <div class="dd-ex-title">${item.name}</div>
+                </div>
+                <span style="color:#94a3b8;font-size:16px;letter-spacing:1px;">•••</span>
+              </div>
+              <div class="dd-set-grid-head">
+                <span>Set</span>
+                <span>Weight x reps</span>
+                <span style="text-align:right;">1RM</span>
+              </div>
+              ${setsLines}
+            </div>`;
+          }).join("");
+
+          contentEl.innerHTML = `
+            <div class="dd-meta-row">
+              <span class="dd-time-pill">${data.startedAt}</span>
+              <span style="color:#94a3b8;font-size:17px;letter-spacing:1px;">•••</span>
+            </div>
+            <div class="dd-dur-big">${data.duration}</div>
+            <div class="recovery-anatomy-wrap" style="padding:4px 0 8px;">
+              ${buildDayLogBodySVG(data.frontHighlight)}
+            </div>
+            <div class="dd-metrics-row">
+              <div>
+                <div class="dd-metric-val">${data.volumeKg}</div>
+                <div class="dd-metric-lbl">Volume (kg)</div>
+              </div>
+              <div>
+                <div class="dd-metric-val">${data.calories}</div>
+                <div class="dd-metric-lbl">Calories</div>
+              </div>
+              <div>
+                <div class="dd-metric-val">${data.avgHr}</div>
+                <div class="dd-metric-lbl">Avg. HR</div>
+              </div>
+            </div>
+            <div class="dd-sec-header">
+              <div style="font-size:15px;font-weight:800;color:#fff;">${data.exercises.length} Exercises</div>
+              <div style="font-size:14px;font-weight:700;color:#fbbf24;display:flex;align-items:center;gap:5px;">
+                <span>🏅</span><span>${data.records} Records</span>
+              </div>
+            </div>
+            ${exCardsHtml}
+          `;
+
+          contentEl.querySelectorAll("[data-dd-open-ex]").forEach(el => {
+            el.addEventListener("click", () => {
+              openFormModal(el.getAttribute("data-dd-open-ex"));
+            });
+          });
+        }
+
+        ddOverlay.classList.add("open");
+        ddOverlay.scrollTop = 0;
+      }
+
+      document.getElementById("ddCloseBtn").addEventListener("click", () => {
+        ddOverlay.classList.remove("open");
+      });
+
+      document.getElementById("ddAddExerciseBtn").addEventListener("click", () => {
+        ddOverlay.classList.remove("open");
+        switchNav("workout");
+        openDayDetailsTab();
+        showToast("Check off exercises to log to today's session");
+      });
+
+      document.getElementById("ddWeightCard").addEventListener("click", openBodyStatsEditor);
+      document.getElementById("ddBfCard").addEventListener("click", openBodyStatsEditor);
+      document.getElementById("ddAddMediaBtn").addEventListener("click", () => {
+        photoInput.click();
+      });
+
       function renderNovemberCalendar(extraLoggedDays) {
         const grid = document.getElementById("novCalGrid");
         // November 2026 starts on Sunday (0 blanks) and has 30 days
-        const loggedSet = new Set([11, 12, 16]);
+        const loggedSet = new Set([11, 12, 16, 18]);
         extraLoggedDays.forEach(d => loggedSet.add(d));
         const todayNum = 18;
         let cells = "";
@@ -5471,16 +6247,12 @@
         grid.querySelectorAll("[data-cal-day]").forEach(c => {
           c.addEventListener("click", () => {
             const d = parseInt(c.getAttribute("data-cal-day"), 10);
-            if (loggedSet.has(d)) {
-              showToast(`Nov ${d}, 2026: Session Logged ✓`);
-            } else {
-              showToast(`Nov ${d}, 2026: Scheduled / Rest`);
-            }
+            playTone(480, 0.05, "sine", 0);
+            openDayDetailScreen(d);
           });
         });
       }
 
-      
       // Body & Activity State Initialization (IMG_8130, 8131, 8132)
       if (!state.bodyStats) {
         state.bodyStats = {
@@ -5835,7 +6607,7 @@
         const mins = totalMins % 60;
         document.getElementById("ovTimeVal").textContent = `${hrs}h ${mins}m`;
 
-        document.getElementById("calTotalSessions").textContent = 3 + state.historyLog.length;
+        document.getElementById("calTotalSessions").textContent = 4 + state.historyLog.length;
         renderNovemberCalendar(extraCalDays);
 
         // Goals list inside Overview
