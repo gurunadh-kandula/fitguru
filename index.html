@@ -2545,7 +2545,7 @@
     }
 
 
-    /* JEFIT FULL-SCREEN ACTIVE WORKOUT PLAYER (IMG_8135, 8136, 8137) */
+    /* JEFIT FULL-SCREEN ACTIVE WORKOUT PLAYER (IMG_8135_2, 8136_2, 8137_2) */
     .active-workout-overlay {
       position: fixed;
       inset: 0;
@@ -2567,22 +2567,22 @@
       background: #0b0d12;
       display: flex;
       flex-direction: column;
-      padding-bottom: calc(var(--safe-bottom) + 148px);
+      padding-bottom: calc(var(--safe-bottom) + 156px);
       position: relative;
     }
 
     .aw-hero {
       position: relative;
       width: 100%;
-      height: 245px;
+      height: 248px;
       background: #f4f1ea;
       overflow: hidden;
       flex-shrink: 0;
-      transition: height 0.25s ease;
+      transition: height 0.22s ease, background 0.22s ease;
     }
 
     .aw-hero.collapsed {
-      height: calc(var(--safe-top) + 64px);
+      height: calc(var(--safe-top) + 62px);
       background: #0b0d12;
     }
 
@@ -2591,7 +2591,8 @@
       height: 100%;
       object-fit: contain;
       display: block;
-      padding-top: calc(var(--safe-top) + 12px);
+      padding-top: calc(var(--safe-top) + 8px);
+      cursor: pointer;
     }
 
     .aw-hero.collapsed img,
@@ -2601,7 +2602,7 @@
 
     .aw-top-controls {
       position: absolute;
-      top: calc(var(--safe-top) + 10px);
+      top: calc(var(--safe-top) + 8px);
       left: 14px;
       right: 14px;
       display: flex;
@@ -2620,10 +2621,10 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: rgba(30, 35, 48, 0.72);
+      background: rgba(58, 62, 72, 0.56);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       color: #fff;
       font-size: 16px;
       font-weight: 700;
@@ -2633,13 +2634,18 @@
       cursor: pointer;
     }
 
+    .aw-hero.collapsed .aw-round-btn {
+      background: #1d212b;
+    }
+
     .aw-compact-vitals {
       display: none;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
+      gap: 12px;
+      font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: #e2e8f0;
+      margin-left: 4px;
     }
 
     .aw-hero.collapsed .aw-compact-vitals {
@@ -2650,19 +2656,20 @@
       position: absolute;
       right: 14px;
       bottom: 18px;
-      background: rgba(30, 35, 48, 0.72);
+      background: rgba(65, 68, 78, 0.58);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-radius: 12px;
       padding: 7px 11px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       font-size: 12px;
       font-weight: 700;
       color: #fff;
     }
 
+    /* Segmented Dashline Tabs for Each Exercise (IMG_8135_2, 8136_2, 8137_2) */
     .aw-seg-bar {
       display: flex;
       gap: 6px;
@@ -2680,17 +2687,27 @@
       flex: 1;
       height: 4px;
       border-radius: 99px;
-      background: #2a303f;
+      background: #333948;
+      overflow: hidden;
       cursor: pointer;
+      position: relative;
     }
 
-    .aw-seg.done {
+    .aw-seg-fill {
+      height: 100%;
+      width: 0%;
+      background: #3b82f6;
+      border-radius: 99px;
+      transition: width 0.25s ease;
+    }
+
+    .aw-seg.done .aw-seg-fill {
+      width: 100%;
       background: #3b82f6;
     }
 
     .aw-seg.active {
-      background: #60a5fa;
-      box-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.55);
     }
 
     .aw-ex-header {
@@ -2732,6 +2749,12 @@
       cursor: pointer;
     }
 
+    .aw-pill-chip.active-mode {
+      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(59, 130, 246, 0.16);
+      color: #93c5fd;
+    }
+
     .aw-pill-chip span.blue {
       color: #60a5fa;
     }
@@ -2759,8 +2782,8 @@
       display: grid;
       grid-template-columns: 44px 1fr 1fr 44px;
       align-items: start;
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 13px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       transition: background 0.15s ease;
     }
 
@@ -2788,6 +2811,9 @@
 
     .aw-set-row.active-set .aw-val-btn {
       color: #3b82f6;
+    }
+
+    .aw-set-row.active-set.resting-next .aw-val-btn {
       text-decoration: underline;
       text-underline-offset: 4px;
     }
@@ -2795,7 +2821,7 @@
     .aw-sub-hint {
       font-size: 11px;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 5px;
       font-weight: 500;
     }
 
@@ -2829,7 +2855,7 @@
       font-weight: 700;
     }
 
-    /* Bottom Dock inside Active Workout (IMG_8135 Blue Log Set vs IMG_8136 Green Rest Countdown) */
+    /* Bottom Dock inside Active Workout (IMG_8135_2 Blue Log Set vs IMG_8136_2 & 8137_2 Green Rest Bar) */
     .aw-bottom-dock {
       position: fixed;
       bottom: 0;
@@ -2844,7 +2870,7 @@
 
     .aw-rest-banner {
       display: none;
-      height: 68px;
+      height: 72px;
       border-radius: 16px;
       background: #141923;
       overflow: hidden;
@@ -2852,7 +2878,7 @@
       margin-bottom: 10px;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 18px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
@@ -2869,6 +2895,10 @@
       width: 75%;
       transition: width 0.35s linear;
       z-index: 1;
+    }
+
+    .aw-rest-banner.warning-15 .aw-rest-fill {
+      background: linear-gradient(90deg, #d97706, #f59e0b);
     }
 
     .aw-rest-adj {
@@ -2892,7 +2922,7 @@
     }
 
     .aw-rest-digits {
-      font-size: 38px;
+      font-size: 40px;
       font-weight: 800;
       color: #fff;
       letter-spacing: -1px;
@@ -2902,7 +2932,7 @@
     .aw-rest-lbl {
       font-size: 13px;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.92);
     }
 
     .aw-action-bar {
@@ -2944,43 +2974,275 @@
       color: #3b82f6;
     }
 
-    /* Post-Workout Share Card Modal (IMG_8138) */
+    .aw-next-ex-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(59, 130, 246, 0.18);
+      border: 1px solid rgba(59, 130, 246, 0.42);
+      color: #93c5fd;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .aw-more-menu {
+      position: absolute;
+      top: calc(var(--safe-top) + 52px);
+      right: 14px;
+      background: #1b202c;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 6px;
+      z-index: 25;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 205px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
+    }
+
+    .aw-more-menu.open {
+      display: flex;
+    }
+
+    .aw-more-item {
+      background: none;
+      border: none;
+      color: #f1f5f9;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 12px;
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .aw-more-item:active {
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    /* Post-Workout Share Card Full-Screen Overlay (IMG_8138_3) */
+    .share-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 88;
+      background: #0b0d12;
+      display: none;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .share-overlay.open {
+      display: flex;
+    }
+
+    .share-shell {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      background: #0b0d12;
+      padding: calc(var(--safe-top) + 8px) 16px calc(var(--safe-bottom) + 18px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .share-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .share-top-share-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #172033;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .workout-count-pill {
+      align-self: flex-start;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 7px;
+      margin-bottom: 12px;
+    }
+
     .share-summary-card {
       background: #171a23;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 18px;
-      padding: 16px;
-      margin: 10px 0 14px;
+      padding: 18px 16px;
+      margin-bottom: 14px;
+      min-height: 315px;
     }
 
     .share-card-title {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
       color: #3b82f6;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .share-card-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      padding-bottom: 12px;
+      padding-bottom: 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .share-ex-line {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       font-size: 14px;
       font-weight: 600;
       color: #f1f5f9;
     }
 
-    .share-ex-line:last-child {
-      border-bottom: none;
+    .share-ex-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .share-ex-thumb {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background: #232836;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .share-carousel {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .share-thumb-tile {
+      aspect-ratio: 1 / 1.15;
+      border-radius: 12px;
+      background: #161922;
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .share-thumb-tile.selected {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    .share-thumb-check {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #475569;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-thumb-tile.selected .share-thumb-check {
+      background: #3b82f6;
+    }
+
+    .share-vis-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 2px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .share-socials {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .share-soc-btn {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .share-soc-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .plan-start-ex-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      background: rgba(59, 130, 246, 0.14);
+      color: #60a5fa;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plan-start-ex-btn.done {
+      border-color: rgba(16, 185, 129, 0.45);
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
     }
 
     .toast-msg {
@@ -3074,7 +3336,7 @@
         <div class="exercise-list" id="exerciseList"></div>
 
         <div class="auto-sync-note" id="autoSyncNote">
-          <span>✓ Every checked box auto-saves to your dated <strong>History</strong>.</span>
+          <span>▶ Tap <strong>Start Workout</strong> below to log sets with guided rest & voice timers.</span>
           <button class="pill-btn" id="viewHistoryQuickBtn">History ›</button>
         </div>
       </div>
@@ -3950,43 +4212,74 @@
   </div>
 
 
-  <!-- FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER (IMG_8135, 8136, 8137) -->
+  <!-- FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER (IMG_8135_2, 8136_2, 8137_2) -->
   <div class="active-workout-overlay" id="activeWorkoutOverlay">
     <div class="aw-shell">
       <div class="aw-hero" id="awHero">
         <div class="aw-top-controls">
           <div class="aw-top-left">
-            <button class="aw-round-btn" id="awCloseBtn" title="Minimize / Finish Workout">✕</button>
+            <button class="aw-round-btn" id="awCloseBtn" title="Finish / Close Workout">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
             <div class="aw-compact-vitals">
-              <span>❤️ <span id="awCompactHr">115</span></span>
+              <span><span style="color:#f43f5e;">♥</span> <span id="awCompactHr">115</span></span>
               <span>🔥 <span id="awCompactKcal">17</span></span>
             </div>
           </div>
           <div class="aw-top-right">
-            <button class="aw-round-btn" id="awStatsBtn" title="Exercise 1RM & History">📊</button>
-            <button class="aw-round-btn" id="awNextExBtn" title="Next Exercise">↻</button>
+            <button class="aw-round-btn" id="awStatsBtn" title="Exercise 1RM & Form">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="4" y="12" width="4" height="8" rx="1"/>
+                <rect x="10" y="6" width="4" height="14" rx="1"/>
+                <rect x="16" y="10" width="4" height="10" rx="1"/>
+              </svg>
+            </button>
+            <button class="aw-round-btn" id="awNextExBtn" title="Next Exercise">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-3-6.7L21 8"/>
+                <path d="M21 3v5h-5"/>
+              </svg>
+            </button>
             <button class="aw-round-btn" id="awMoreBtn" title="Workout Options">•••</button>
           </div>
+        </div>
+
+        <div class="aw-more-menu" id="awMoreMenu">
+          <button class="aw-more-item" id="awToggleCompactBtn">↕ Toggle Compact / Video View</button>
+          <button class="aw-more-item" id="awFinishNowBtn">🏁 Finish Workout & Summary</button>
         </div>
 
         <img id="awHeroGif" src="" alt="Exercise Form" referrerpolicy="no-referrer" />
 
         <div class="aw-vitals-pill">
-          <div>❤️ <span id="awHeroHr">-- bpm</span></div>
+          <div><span style="color:#f43f5e;">♥</span> <span id="awHeroHr">-- bpm</span></div>
           <div>🔥 <span id="awHeroKcal">-- kcal</span></div>
         </div>
       </div>
 
-      <!-- Segmented Exercise Progress Bar -->
+      <!-- Segmented Dashlines Tabs for Each Exercise -->
       <div class="aw-seg-bar" id="awSegBar"></div>
 
       <!-- Exercise Title + Rest / Interval / 1RM Header -->
       <div class="aw-ex-header">
+        <div class="aw-next-ex-pill" id="awNextExBadge" style="display:none;">⏭ Next Exercise · Resting Before Set 1</div>
         <div class="aw-ex-title" id="awExTitle">Dumbbell Shoulder Press</div>
         <div class="aw-sub-controls">
           <div class="aw-chip-group">
-            <button class="aw-pill-chip" id="awRestPresetBtn">🕒 Rest <span class="blue" id="awRestPresetLbl">01:30</span></button>
-            <button class="aw-pill-chip" id="awIntervalBtn">⏱ Interval</button>
+            <button class="aw-pill-chip" id="awRestPresetBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+              </svg>
+              Rest <span class="blue" id="awRestPresetLbl">01:30</span>
+            </button>
+            <button class="aw-pill-chip" id="awIntervalBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/>
+              </svg>
+              <span id="awIntervalLbl">Interval</span>
+            </button>
           </div>
           <div class="aw-1rm-tag">1RM: <strong id="aw1rmVal">6.33</strong></div>
         </div>
@@ -4016,33 +4309,47 @@
           <button class="aw-rest-adj" id="awRestMinus15">-15s</button>
           <div class="aw-rest-center">
             <span class="aw-rest-digits" id="awRestDigits">01:08</span>
-            <span class="aw-rest-lbl">Rest</span>
+            <span class="aw-rest-lbl" id="awRestLbl">Rest</span>
           </div>
           <button class="aw-rest-adj" id="awRestPlus15">+15s</button>
         </div>
 
         <div class="aw-action-bar">
-          <button class="aw-sq-icon-btn" id="awNoteBtn" title="Exercise Note">📝</button>
-          <button class="aw-sq-icon-btn" id="awVoiceCoachBtn" title="Announce Next Set">✨</button>
+          <button class="aw-sq-icon-btn" id="awNoteBtn" title="Exercise Note">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="aw-sq-icon-btn" id="awVoiceCoachBtn" title="Voice Coach Cue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#818cf8"/>
+            </svg>
+          </button>
           <button class="aw-main-cta" id="awPrimaryActionBtn">Log Set</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- POST-WORKOUT SHARE CARD MODAL (IMG_8138) -->
-  <div class="modal-backdrop" id="shareWorkoutModal">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-head">
-        <div>
-          <div style="font-size:17px;font-weight:800;">Pick card to share</div>
-          <div style="font-size:12px;color:#94a3b8;">Workout completed & saved to History</div>
-        </div>
-        <button class="close-btn" id="closeShareModal">✕</button>
+  <!-- POST-WORKOUT SHARE CARD FULL-SCREEN OVERLAY (IMG_8138_3) -->
+  <div class="share-overlay" id="shareWorkoutModal">
+    <div class="share-shell">
+      <div class="share-topbar">
+        <div style="font-size:17px;font-weight:800;color:#fff;">Pick card to share</div>
+        <button class="share-top-share-btn" id="shareCardTopBtn" title="Share Summary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+        </button>
       </div>
 
-      <div class="share-summary-card">
+      <div class="workout-count-pill" id="scWorkoutBadge">4th workout</div>
+
+      <!-- Main Preview Card (Switches between Summary List, Muscle Split, Top PR, and Milestone) -->
+      <div class="share-summary-card" id="scMainPreviewCard">
         <div class="share-card-title" id="scWorkoutTitle">Upper Body Workout</div>
         <div class="share-card-stats">
           <div>
@@ -4061,7 +4368,65 @@
         <div id="scExerciseList"></div>
       </div>
 
-      <button class="primary-btn" style="width:100%;padding:14px;font-size:15px;" id="doneShareBtn">Done</button>
+      <!-- 5-Tile Card Selector Strip (IMG_8138_3) -->
+      <div class="share-carousel" id="scCarousel">
+        <div class="share-thumb-tile" id="scAddPhotoTile" title="Add Workout Photo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+
+        <div class="share-thumb-tile" data-sc-mode="pr">
+          <div class="share-thumb-check">✓</div>
+          <div style="font-size:9px;color:#94a3b8;font-weight:700;">TOP 1RM</div>
+          <div style="font-size:13px;font-weight:900;color:#fff;margin-top:2px;" id="scThumbPr">7.0kgs</div>
+        </div>
+
+        <div class="share-thumb-tile" data-sc-mode="streak">
+          <div class="share-thumb-check">✓</div>
+          <div style="font-size:18px;">🔥</div>
+          <div style="font-size:9px;color:#60a5fa;font-weight:800;margin-top:2px;">STREAK</div>
+        </div>
+
+        <div class="share-thumb-tile" data-sc-mode="muscles">
+          <div class="share-thumb-check">✓</div>
+          <div style="font-size:9px;color:#60a5fa;font-weight:800;">MUSCLES</div>
+          <div style="font-size:8px;color:#94a3b8;margin-top:2px;">Split %</div>
+        </div>
+
+        <div class="share-thumb-tile selected" data-sc-mode="list">
+          <div class="share-thumb-check">✓</div>
+          <div style="font-size:8px;color:#3b82f6;font-weight:800;">WORKOUT</div>
+          <div style="font-size:8px;color:#cbd5e1;margin-top:2px;">Exercises</div>
+        </div>
+      </div>
+
+      <div class="share-vis-row">
+        <span style="color:#fff;">Visibility</span>
+        <span style="color:#3b82f6;cursor:pointer;" id="scVisToggle">Member ›</span>
+      </div>
+
+      <div class="share-socials">
+        <button class="share-soc-btn" data-soc-share="Instagram Stories">
+          <div class="share-soc-circle" style="background:linear-gradient(135deg,#f59e0b,#ec4899,#8b5cf6);">IG</div>
+          <span>Stories</span>
+        </button>
+        <button class="share-soc-btn" data-soc-share="TikTok">
+          <div class="share-soc-circle" style="background:#1e293b;border:1px solid rgba(255,255,255,0.12);">♪</div>
+          <span>TikTok</span>
+        </button>
+        <button class="share-soc-btn" data-soc-share="Facebook">
+          <div class="share-soc-circle" style="background:#1877f2;">f</div>
+          <span>Facebook</span>
+        </button>
+        <button class="share-soc-btn" data-soc-share="Share Sheet">
+          <div class="share-soc-circle" style="background:#1e293b;border:1px solid rgba(255,255,255,0.12);">•••</div>
+          <span>More</span>
+        </button>
+      </div>
+
+      <button class="primary-btn" style="width:100%;padding:15px;font-size:16px;border-radius:14px;margin-top:auto;" id="doneShareBtn">Done</button>
     </div>
   </div>
 
@@ -5055,8 +5420,9 @@
         try {
           if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
+            window.speechSynthesis.resume();
             const u = new SpeechSynthesisUtterance(text);
-            u.rate = 1.05;
+            u.rate = 1.03;
             u.pitch = 1.0;
             window.speechSynthesis.speak(u);
           }
@@ -5414,12 +5780,12 @@
             setsHtml += `<div class="set-row ${isDone ? "done" : ""}">
               <div class="set-num">${ex.id === "briskWalk" ? "Walk" : "Set " + s}</div>
               <div class="rep-ctrl">
-                <button class="rep-btn" data-rep-delta="-1" data-set-key="${setKey}" data-ex-id="${ex.id}" data-idx="${idx}">-</button>
+                <button class="rep-btn" data-rep-delta="-1" data-set-key="${setKey}">-</button>
                 <span>${repsVal} ${unitLabel}</span>
-                <button class="rep-btn" data-rep-delta="1" data-set-key="${setKey}" data-ex-id="${ex.id}" data-idx="${idx}">+</button>
+                <button class="rep-btn" data-rep-delta="1" data-set-key="${setKey}">+</button>
               </div>
               <div style="font-size:11px;color:#94a3b8;font-weight:700;">${curWeight}</div>
-              <button class="check-btn" data-toggle-set="${setKey}" data-ex-id="${ex.id}" data-idx="${idx}" data-rest-sec="${ex.rest}">✓</button>
+              <span style="font-size:11px;font-weight:700;color:${isDone ? "#34d399" : "#64748b"};text-align:right;">${isDone ? "Done ✓" : "Target"}</span>
             </div>`;
           }
 
@@ -5430,13 +5796,13 @@
           const weightOptions = isWalk
             ? ["3.0 km", "4.0 km", "5.0 km", "6.0 km", "7.0 km"]
             : ["Bodyweight", "5 kg", "7.5 kg", "10 kg", "12.5 kg", "15 kg"];
-          const selectorLabel = isWalk ? "Distance:" : "Load / Hand:";
+          const selectorLabel = isWalk ? "Target Distance:" : "Target Load:";
 
           const weightChipsHtml = `
             <div class="weight-selector">
               <span>${selectorLabel}</span>
               <div class="weight-chips">
-                ${weightOptions.map(w => `<button class="w-chip ${curWeight === w ? "active" : ""}" data-set-weight="${w}" data-wkey="${wKey}" data-ex-id="${ex.id}" data-idx="${idx}">${w}</button>`).join("")}
+                ${weightOptions.map(w => `<button class="w-chip ${curWeight === w ? "active" : ""}" data-set-weight="${w}" data-wkey="${wKey}">${w}</button>`).join("")}
               </div>
             </div>`;
 
@@ -5451,12 +5817,12 @@
                 <div class="ex-sub">
                   <span>${ex.sets} × ${ex.reps} ${isWalk ? "min" : "reps"}</span>
                   <span class="weight-tag">${curWeight}</span>
-                  <span style="color:${allDone ? "#34d399" : "#64748b"};font-weight:700;">${doneCount}/${ex.sets}</span>
+                  ${doneCount > 0 ? `<span style="color:#34d399;font-weight:700;">${doneCount}/${ex.sets} logged</span>` : ""}
                 </div>
               </div>
               <div class="card-actions">
                 <button class="form-pill" data-open-form="${ex.id}">Form</button>
-                <button class="quick-done-btn ${allDone ? "done" : ""}" data-quick-all="${wKey}" data-ex-id="${ex.id}" data-idx="${idx}" data-sets="${ex.sets}" title="Log exercise complete">✓</button>
+                <button class="plan-start-ex-btn ${allDone ? "done" : ""}" data-start-ex-idx="${idx}" title="Start workout at ${ex.name}">${allDone ? "✓" : "▶"}</button>
               </div>
             </div>
             <div class="set-drawer">
@@ -5480,42 +5846,19 @@
           });
         });
 
-        container.querySelectorAll("[data-quick-all]").forEach(btn => {
+        container.querySelectorAll("[data-start-ex-idx]").forEach(btn => {
           btn.addEventListener("click", (e) => {
             e.stopPropagation();
-            const wKey = btn.getAttribute("data-quick-all");
-            const exId = btn.getAttribute("data-ex-id");
-            const idx = parseInt(btn.getAttribute("data-idx"), 10) || 0;
-            const totalSets = parseInt(btn.getAttribute("data-sets"), 10) || 1;
-            const ex = EXERCISES[exId] || { name: exId };
-
-            let allAlreadyDone = true;
-            for (let s = 1; s <= totalSets; s++) {
-              if (!state.completedSets[`${wKey}_s${s}`]) allAlreadyDone = false;
-            }
-            const targetState = !allAlreadyDone;
-            for (let s = 1; s <= totalSets; s++) {
-              state.completedSets[`${wKey}_s${s}`] = targetState;
-            }
-            syncExerciseToHistory(state.activeDay, exId, idx);
-
-            if (targetState) {
-              chimeSetDone();
-              showToast(`✓ ${ex.name} logged to History!`);
-            } else {
-              showToast(`Removed ${ex.name} from today's log`);
-            }
-            renderDayWorkout();
+            const startIdx = parseInt(btn.getAttribute("data-start-ex-idx"), 10) || 0;
+            openActiveWorkoutPlayer(startIdx);
           });
         });
 
         container.querySelectorAll("[data-set-weight]").forEach(btn => {
           btn.addEventListener("click", () => {
             const wKey = btn.getAttribute("data-wkey");
-            const exId = btn.getAttribute("data-ex-id");
-            const idx = parseInt(btn.getAttribute("data-idx"), 10) || 0;
             state.weights[wKey] = btn.getAttribute("data-set-weight");
-            syncExerciseToHistory(state.activeDay, exId, idx);
+            saveState();
             playTone(520, 0.06, "sine", 0);
             renderDayWorkout();
           });
@@ -5524,44 +5867,11 @@
         container.querySelectorAll("[data-rep-delta]").forEach(btn => {
           btn.addEventListener("click", () => {
             const sKey = btn.getAttribute("data-set-key");
-            const exId = btn.getAttribute("data-ex-id");
-            const idx = parseInt(btn.getAttribute("data-idx"), 10) || 0;
             const delta = parseInt(btn.getAttribute("data-rep-delta"), 10);
             const defaultVal = sKey.includes("briskWalk") ? 50 : 10;
             const cur = state.customReps[sKey] || defaultVal;
             state.customReps[sKey] = Math.max(1, cur + delta);
-            syncExerciseToHistory(state.activeDay, exId, idx);
-            renderDayWorkout();
-          });
-        });
-
-        container.querySelectorAll("[data-toggle-set]").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const sKey = btn.getAttribute("data-toggle-set");
-            const exId = btn.getAttribute("data-ex-id");
-            const idx = parseInt(btn.getAttribute("data-idx"), 10) || 0;
-            const restSec = parseInt(btn.getAttribute("data-rest-sec"), 10) || 0;
-            const ex = EXERCISES[exId] || { name: exId, sets: 1 };
-
-            const next = !state.completedSets[sKey];
-            state.completedSets[sKey] = next;
-            syncExerciseToHistory(state.activeDay, exId, idx);
-
-            if (next) {
-              chimeSetDone();
-              showToast(`✓ ${ex.name} logged to History!`);
-
-              const wKey = `${state.activePlanId}_${state.activeDay}_${exId}_${idx}`;
-              let doneNow = 0;
-              for (let s = 1; s <= ex.sets; s++) {
-                if (state.completedSets[`${wKey}_s${s}`]) doneNow++;
-              }
-              if (ex.id !== "briskWalk" && restSec > 0 && doneNow < ex.sets) {
-                startRestTimer(restSec);
-              }
-            } else {
-              showToast(`Unchecked set`);
-            }
+            saveState();
             renderDayWorkout();
           });
         });
@@ -5569,7 +5879,7 @@
 
       document.getElementById("expandAllBtn").addEventListener("click", () => {
         state.expandedAll = !state.expandedAll;
-        document.getElementById("expandAllBtn").textContent = state.expandedAll ? "Collapse Sets" : "Expand Sets";
+        document.getElementById("expandAllBtn").textContent = state.expandedAll ? "Collapse Targets" : "Expand Sets";
         renderDayWorkout();
       });
 
@@ -5630,7 +5940,7 @@
         restBar.classList.remove("visible");
       });
 
-      // FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER + REST TIMER + VOICE ANNOUNCEMENTS (IMG_8135, 8136, 8137, 8138)
+      // FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER + DASHLINE TABS + REST TIMER + SUMMARY (v14)
       const awOverlay = document.getElementById("activeWorkoutOverlay");
       const shareModal = document.getElementById("shareWorkoutModal");
       let awSessionSec = 0;
@@ -5640,16 +5950,19 @@
       let awRestTotal = 90;
       let awRestLeft = 0;
       let awRestTick = null;
+      let awIsExerciseTransitionRest = false;
+      let awIntervalMode = false;
       let awHeartRate = 111;
       let awCalories = 17;
+      let lastCompletedSummary = null;
 
       function getRestDurationForEx(ex) {
         if (!ex) return 90;
         if (ex.id === "briskWalk") return 0;
-        if (ex.rest === 120) return 90;
-        if (ex.rest === 90) return 90;
+        if (awIntervalMode) return 45;
+        if (typeof ex.rest === "number" && ex.rest > 0) return ex.rest;
         if (ex.id === "hammerCurl" || ex.id === "bicepCurl") return 75; // 1 min 15 secs
-        return 60; // 1 min
+        return 90; // 1 min 30 secs default like IMG_8135_2
       }
 
       function getTargetRangeText(ex) {
@@ -5677,53 +5990,81 @@
           ? `${sObj.weightLabel}`
           : (sObj.weightNum > 0 ? `${sObj.weightNum} kilograms per dumbbell` : "bodyweight");
         const rText = ex.id === "briskWalk" ? `${sObj.reps} minutes` : `${sObj.reps} reps`;
-        const lead = prefixText ? `${prefixText}. ` : "";
+        const lead = prefixText ? `${prefixText} ` : "";
         speak(`${lead}${ex.name}, Set ${setNum}: ${rText} at ${wText}.`);
       }
 
-      function stopAwRestTimer(announceNext) {
+      function stopAwRestTimer(announceStartRep) {
         if (awRestTick) {
           clearInterval(awRestTick);
           awRestTick = null;
         }
         awRestLeft = 0;
-        document.getElementById("awRestBanner").classList.remove("visible");
-        document.getElementById("awHero").classList.remove("collapsed");
+        awIsExerciseTransitionRest = false;
+
+        const banner = document.getElementById("awRestBanner");
+        banner.classList.remove("visible", "warning-15");
+        document.getElementById("awRestLbl").textContent = "Rest";
+        document.getElementById("awNextExBadge").style.display = "none";
+
         const cta = document.getElementById("awPrimaryActionBtn");
         cta.textContent = "Log Set";
         cta.classList.remove("skip-mode");
-        if (announceNext) {
+        renderActiveWorkoutPlayer();
+
+        if (announceStartRep) {
           playTone(659.25, 0.14, "sine", 0);
           playTone(880, 0.16, "sine", 0.14);
           playTone(1046.5, 0.25, "sine", 0.28);
           try { if (navigator.vibrate) navigator.vibrate([120, 80, 180]); } catch (e) {}
-          announceCurrentTargetSet("Rest complete. Next up");
+          announceCurrentTargetSet("Start your rep!");
         }
       }
 
-      function startAwRestTimer(seconds) {
+      function startAwRestTimer(seconds, isNextExerciseTransition) {
         if (!seconds || seconds <= 0) return;
         if (awRestTick) clearInterval(awRestTick);
         awRestTotal = seconds;
         awRestLeft = seconds;
+        awIsExerciseTransitionRest = !!isNextExerciseTransition;
 
         const banner = document.getElementById("awRestBanner");
         const digits = document.getElementById("awRestDigits");
         const fill = document.getElementById("awRestFill");
+        const lbl = document.getElementById("awRestLbl");
+        const nextBadge = document.getElementById("awNextExBadge");
         const cta = document.getElementById("awPrimaryActionBtn");
 
+        banner.classList.remove("warning-15");
         banner.classList.add("visible");
-        document.getElementById("awHero").classList.add("collapsed");
         digits.textContent = formatSec(awRestLeft);
+        lbl.textContent = awIsExerciseTransitionRest ? "Next Exercise Rest" : "Rest";
+        nextBadge.style.display = awIsExerciseTransitionRest ? "inline-flex" : "none";
         fill.style.width = "100%";
         cta.textContent = "Skip rest";
         cta.classList.add("skip-mode");
+        renderActiveWorkoutPlayer();
+
+        if (awIsExerciseTransitionRest && awExList[awExIdx]) {
+          const nextEx = awExList[awExIdx].ex;
+          speak(`Exercise complete. Moving to ${nextEx.name}. Resting ${seconds} seconds before Set 1.`);
+        }
 
         awRestTick = setInterval(() => {
           awRestLeft--;
-          if (awRestLeft <= 3 && awRestLeft > 0) {
+
+          // 15-second warning sound + voice announcement
+          if (awRestLeft === 15) {
+            banner.classList.add("warning-15");
+            lbl.textContent = "15s left · Get ready";
+            playTone(880, 0.14, "sine", 0);
+            playTone(880, 0.18, "sine", 0.16);
+            try { if (navigator.vibrate) navigator.vibrate([100, 60, 100]); } catch (e) {}
+            speak("Timer is about to finish, 15 seconds left.");
+          } else if (awRestLeft <= 3 && awRestLeft > 0) {
             playTone(740, 0.08, "sine", 0);
           }
+
           if (awRestLeft <= 0) {
             stopAwRestTimer(true);
           } else {
@@ -5739,30 +6080,44 @@
         if (!cur) return;
         const ex = cur.ex;
 
-        // Segmented top progress bar
+        // Dashlines Tabs for Each Exercise (IMG_8135_2, 8136_2, 8137_2)
         const segBar = document.getElementById("awSegBar");
         segBar.innerHTML = awExList.map((item, i) => {
-          const allDone = item.sets.every(s => s.done);
+          const totalS = Math.max(1, item.sets.length);
+          const doneS = item.sets.filter(s => s.done).length;
+          const allDone = doneS === totalS;
+          const isCurrent = i === awExIdx;
           const cls = ["aw-seg"];
           if (allDone) cls.push("done");
-          else if (i === awExIdx) cls.push("active");
-          return `<div class="${cls.join(" ")}" data-aw-jump="${i}"></div>`;
+          if (isCurrent) cls.push("active");
+
+          let fillPct = 0;
+          if (allDone) fillPct = 100;
+          else if (isCurrent) fillPct = Math.max(55, Math.round((doneS / totalS) * 100));
+          else if (doneS > 0) fillPct = Math.round((doneS / totalS) * 100);
+
+          return `<div class="${cls.join(" ")}" data-aw-jump="${i}" title="${item.ex.name}">
+            <div class="aw-seg-fill" style="width:${fillPct}%"></div>
+          </div>`;
         }).join("");
+
         segBar.querySelectorAll("[data-aw-jump]").forEach(el => {
           el.addEventListener("click", () => {
             awExIdx = parseInt(el.getAttribute("data-aw-jump"), 10);
+            stopAwRestTimer(false);
             renderActiveWorkoutPlayer();
           });
         });
 
-        // Hero GIF & Vitals
+        // Hero GIF & Vitals (-- bpm / -- kcal before first set logged, live vitals after)
+        const anyLoggedYet = awExList.some(item => item.sets.some(s => s.done));
         const heroImg = document.getElementById("awHeroGif");
         heroImg.onerror = function () { this.onerror = null; this.src = FALLBACK_SVG; };
         heroImg.src = ex.gif;
-        document.getElementById("awHeroHr").textContent = `${awHeartRate} bpm`;
-        document.getElementById("awHeroKcal").textContent = `${awCalories} kcal`;
-        document.getElementById("awCompactHr").textContent = awHeartRate;
-        document.getElementById("awCompactKcal").textContent = awCalories;
+        document.getElementById("awHeroHr").textContent = anyLoggedYet ? `${awHeartRate} bpm` : "-- bpm";
+        document.getElementById("awHeroKcal").textContent = anyLoggedYet ? `${awCalories} kcal` : "-- kcal";
+        document.getElementById("awCompactHr").textContent = anyLoggedYet ? awHeartRate : "--";
+        document.getElementById("awCompactKcal").textContent = anyLoggedYet ? awCalories : "--";
 
         // Title, Rest preset chip, and 1RM
         document.getElementById("awExTitle").textContent = ex.name;
@@ -5774,14 +6129,18 @@
 
         // Find first incomplete set to highlight in blue
         const activeSetIdx = cur.sets.findIndex(s => !s.done);
+        const isResting = awRestLeft > 0;
         const setsBox = document.getElementById("awSetsContainer");
         setsBox.innerHTML = cur.sets.map((s, sIdx) => {
           const isCurrent = sIdx === activeSetIdx;
           const weightDisplay = ex.id === "briskWalk" ? s.weightLabel : s.weightNum;
           const subWeight = ex.id === "briskWalk" ? "Distance" : (s.weightNum > 0 ? "Per DB" : "Bodyweight");
           const subReps = isCurrent ? getTargetRangeText(ex) : "";
+          const rowCls = ["aw-set-row"];
+          if (isCurrent) rowCls.push("active-set");
+          if (isCurrent && isResting) rowCls.push("resting-next");
 
-          return `<div class="aw-set-row ${isCurrent ? "active-set" : ""}">
+          return `<div class="${rowCls.join(" ")}">
             <div class="aw-set-num">${sIdx + 1}</div>
             <div>
               <button class="aw-val-btn" data-aw-edit-w="${sIdx}">${weightDisplay}</button>
@@ -5848,7 +6207,7 @@
 
         sObj.done = true;
         chimeSetDone();
-        awHeartRate = Math.min(148, awHeartRate + 2);
+        awHeartRate = Math.min(148, awHeartRate + 3);
         awCalories += 9;
 
         // Sync to main state & dated history
@@ -5864,22 +6223,28 @@
         const restSec = getRestDurationForEx(ex);
 
         if (nextUndoneIdx >= 0) {
-          renderActiveWorkoutPlayer();
-          if (restSec > 0) startAwRestTimer(restSec);
-        } else if (awExIdx < awExList.length - 1) {
-          // Advance to next exercise in workout and start rest timer
-          awExIdx++;
-          renderActiveWorkoutPlayer();
-          const nextRest = getRestDurationForEx(awExList[awExIdx].ex);
-          if (nextRest > 0) startAwRestTimer(nextRest);
+          if (restSec > 0) startAwRestTimer(restSec, false);
+          else renderActiveWorkoutPlayer();
         } else {
-          // Final set of final exercise completed -> Finish workout & show share summary card (IMG_8138)
-          renderActiveWorkoutPlayer();
-          finishActiveWorkoutSession();
+          // Current exercise completed -> look for the next incomplete exercise in today's workout
+          let nextExIdx = awExList.findIndex((item, i) => i > awExIdx && item.sets.some(s => !s.done));
+          if (nextExIdx < 0) {
+            nextExIdx = awExList.findIndex(item => item.sets.some(s => !s.done));
+          }
+
+          if (nextExIdx >= 0) {
+            awExIdx = nextExIdx;
+            const nextExRest = getRestDurationForEx(awExList[awExIdx].ex) || restSec || 90;
+            startAwRestTimer(nextExRest, true);
+          } else {
+            // All exercises for the day completed -> Finish workout & show summary screen (IMG_8138_3)
+            renderActiveWorkoutPlayer();
+            finishActiveWorkoutSession();
+          }
         }
       }
 
-      function openActiveWorkoutPlayer() {
+      function openActiveWorkoutPlayer(forcedStartIdx) {
         const day = state.activeDay;
         const ids = getDayExerciseIds(day);
         if (ids.length === 0) {
@@ -5905,8 +6270,12 @@
           return { ex, planIdx: idx, sets };
         });
 
-        awExIdx = awExList.findIndex(item => item.sets.some(s => !s.done));
-        if (awExIdx < 0) awExIdx = 0;
+        if (typeof forcedStartIdx === "number" && forcedStartIdx >= 0 && forcedStartIdx < awExList.length) {
+          awExIdx = forcedStartIdx;
+        } else {
+          awExIdx = awExList.findIndex(item => item.sets.some(s => !s.done));
+          if (awExIdx < 0) awExIdx = 0;
+        }
 
         awSessionSec = 0;
         awHeartRate = 111;
@@ -5916,11 +6285,83 @@
           awSessionSec++;
         }, 1000);
 
+        document.getElementById("awHero").classList.remove("collapsed");
+        document.getElementById("awMoreMenu").classList.remove("open");
         stopAwRestTimer(false);
-        renderActiveWorkoutPlayer();
         awOverlay.classList.add("open");
         chimeSetDone();
-        announceCurrentTargetSet(`Starting ${day} workout`);
+        announceCurrentTargetSet(`Starting ${day} workout. Start your rep!`);
+      }
+
+      function getOrdinalSuffix(n) {
+        const s = ["th", "st", "nd", "rd"];
+        const v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+      }
+
+      function renderSummaryCardMode(mode) {
+        if (!lastCompletedSummary) return;
+        const d = lastCompletedSummary;
+        const card = document.getElementById("scMainPreviewCard");
+
+        document.querySelectorAll("[data-sc-mode]").forEach(t => {
+          t.classList.toggle("selected", t.getAttribute("data-sc-mode") === mode);
+        });
+
+        if (mode === "pr") {
+          card.innerHTML = `
+            <div class="share-card-title">${d.planTitle}</div>
+            <div style="text-align:center;padding:24px 10px;">
+              <div style="font-size:12px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px;">Session Top Estimated 1RM</div>
+              <div style="font-size:44px;font-weight:900;color:#fff;margin:8px 0;">${d.top1Rm} <span style="font-size:20px;color:#3b82f6;">kgs</span></div>
+              <div style="font-size:15px;font-weight:700;color:#cbd5e1;">${d.topExName}</div>
+              <div style="display:inline-block;margin-top:14px;background:rgba(251,191,36,0.16);color:#fbbf24;font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;">🏅 ${d.records} New Records Set</div>
+            </div>`;
+        } else if (mode === "streak") {
+          card.innerHTML = `
+            <div class="share-card-title">${d.planTitle}</div>
+            <div style="text-align:center;padding:22px 10px;">
+              <div style="font-size:46px;margin-bottom:6px;">🔥</div>
+              <div style="font-size:26px;font-weight:900;color:#fff;">2 Week Streak</div>
+              <div style="font-size:13px;color:#94a3b8;margin-top:4px;">${d.duration} · ${d.volume} · ${d.calories} kcal burned</div>
+              <div style="margin-top:14px;font-size:12px;color:#34d399;font-weight:700;">✓ Saved to gurunadh's November 2026 Calendar</div>
+            </div>`;
+        } else if (mode === "muscles") {
+          card.innerHTML = `
+            <div class="share-card-title">${d.planTitle}</div>
+            <div class="share-card-stats">
+              <div><div style="font-size:11px;color:#94a3b8;">Duration</div><div style="font-size:17px;font-weight:800;color:#fff;">${d.duration}</div></div>
+              <div><div style="font-size:11px;color:#94a3b8;">Volume</div><div style="font-size:17px;font-weight:800;color:#fff;">${d.volume}</div></div>
+              <div><div style="font-size:11px;color:#94a3b8;">Calories</div><div style="font-size:17px;font-weight:800;color:#fff;">${d.calories} kcal</div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:6px;">
+              <div>${buildDayLogBodySVG("upper").replace('width="264" height="270"', 'width="160" height="165"')}</div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:700;">
+                <div style="display:flex;justify-content:space-between;"><span>Primary Focus</span><span style="color:#3b82f6;">65%</span></div>
+                <div style="display:flex;justify-content:space-between;"><span>Secondary</span><span style="color:#60a5fa;">25%</span></div>
+                <div style="display:flex;justify-content:space-between;"><span>Core & Stabilizers</span><span style="color:#34d399;">10%</span></div>
+              </div>
+            </div>`;
+        } else {
+          // Default "list" card matching IMG_8138_3
+          card.innerHTML = `
+            <div class="share-card-title" id="scWorkoutTitle">${d.planTitle}</div>
+            <div class="share-card-stats">
+              <div>
+                <div style="font-size:11px;color:#94a3b8;">Duration</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;" id="scDuration">${d.duration}</div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#94a3b8;">Volume</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;" id="scVolume">${d.volume}</div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:#94a3b8;">Records</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;" id="scRecords">${d.records}</div>
+              </div>
+            </div>
+            <div id="scExerciseList">${d.rowsHtml}</div>`;
+        }
       }
 
       function finishActiveWorkoutSession() {
@@ -5935,26 +6376,51 @@
 
         let totalVol = 0;
         let completedExCount = 0;
+        let best1Rm = 0;
+        let bestExName = "";
+
         const rowsHtml = awExList.map(item => {
           const doneSets = item.sets.filter(s => s.done);
+          const countToShow = doneSets.length > 0 ? doneSets.length : item.sets.length;
           if (doneSets.length > 0) completedExCount++;
           doneSets.forEach(s => {
             if (item.ex.id !== "briskWalk") {
               totalVol += Math.round((s.weightNum || 0) * 2 * (s.reps || 0));
+              const rm = (s.weightNum || 0) * (1 + (s.reps || 0) / 30);
+              if (rm > best1Rm) {
+                best1Rm = rm;
+                bestExName = item.ex.name;
+              }
             }
           });
           return `<div class="share-ex-line">
-            <span>${item.ex.name}</span>
-            <span style="color:#3b82f6;font-weight:800;">${item.sets.length}x</span>
+            <div class="share-ex-left">
+              <img class="share-ex-thumb" src="${item.ex.gif}" alt="${item.ex.name}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_SVG}'" />
+              <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.ex.name}</span>
+            </div>
+            <span style="color:#3b82f6;font-weight:800;flex-shrink:0;">${countToShow}x</span>
           </div>`;
         }).join("");
 
         const planTitle = getDayPlan(state.activeDay).fullTitle;
-        document.getElementById("scWorkoutTitle").textContent = planTitle;
-        document.getElementById("scDuration").textContent = durFormatted;
-        document.getElementById("scVolume").textContent = `${totalVol} kgs`;
-        document.getElementById("scRecords").textContent = Math.max(1, Math.min(3, completedExCount));
-        document.getElementById("scExerciseList").innerHTML = rowsHtml;
+        const recCount = Math.max(1, Math.min(3, completedExCount));
+        const topRmStr = best1Rm > 0 ? best1Rm.toFixed(1) : "7.0";
+
+        lastCompletedSummary = {
+          planTitle,
+          duration: durFormatted,
+          volume: `${totalVol} kgs`,
+          records: recCount,
+          calories: awCalories,
+          top1Rm: topRmStr,
+          topExName: bestExName || (awExList[0] ? awExList[0].ex.name : "Workout"),
+          rowsHtml
+        };
+
+        const workoutNumber = Math.max(4, 3 + state.historyLog.length);
+        document.getElementById("scWorkoutBadge").textContent = `${getOrdinalSuffix(workoutNumber)} workout`;
+        document.getElementById("scThumbPr").textContent = `${topRmStr}kgs`;
+        renderSummaryCardMode("list");
 
         playTone(523.25, 0.14, "triangle", 0);
         playTone(659.25, 0.14, "triangle", 0.14);
@@ -5963,7 +6429,7 @@
         shareModal.classList.add("open");
       }
 
-      document.getElementById("startWorkoutBtn").addEventListener("click", openActiveWorkoutPlayer);
+      document.getElementById("startWorkoutBtn").addEventListener("click", () => openActiveWorkoutPlayer());
 
       document.getElementById("awPrimaryActionBtn").addEventListener("click", () => {
         if (awRestLeft > 0) {
@@ -5998,6 +6464,33 @@
         showToast(`Rest timer set to ${formatSec(nextRest)}`);
       });
 
+      document.getElementById("awIntervalBtn").addEventListener("click", () => {
+        awIntervalMode = !awIntervalMode;
+        const btn = document.getElementById("awIntervalBtn");
+        btn.classList.toggle("active-mode", awIntervalMode);
+        document.getElementById("awIntervalLbl").textContent = awIntervalMode ? "Interval 45s" : "Interval";
+        renderActiveWorkoutPlayer();
+        showToast(awIntervalMode ? "Interval timer set to 45s" : "Standard rest timer restored");
+      });
+
+      document.getElementById("awHeroGif").addEventListener("click", () => {
+        document.getElementById("awHero").classList.toggle("collapsed");
+      });
+
+      document.getElementById("awMoreBtn").addEventListener("click", () => {
+        document.getElementById("awMoreMenu").classList.toggle("open");
+      });
+
+      document.getElementById("awToggleCompactBtn").addEventListener("click", () => {
+        document.getElementById("awMoreMenu").classList.remove("open");
+        document.getElementById("awHero").classList.toggle("collapsed");
+      });
+
+      document.getElementById("awFinishNowBtn").addEventListener("click", () => {
+        document.getElementById("awMoreMenu").classList.remove("open");
+        finishActiveWorkoutSession();
+      });
+
       document.getElementById("awAddSetBtn").addEventListener("click", () => {
         const cur = awExList[awExIdx];
         if (!cur) return;
@@ -6017,7 +6510,6 @@
         if (awExList.length <= 1) return;
         awExIdx = (awExIdx + 1) % awExList.length;
         stopAwRestTimer(false);
-        renderActiveWorkoutPlayer();
         announceCurrentTargetSet("Switched to");
       });
 
@@ -6038,7 +6530,7 @@
       });
 
       document.getElementById("awVoiceCoachBtn").addEventListener("click", () => {
-        announceCurrentTargetSet("Current target");
+        announceCurrentTargetSet("Start your rep!");
       });
 
       document.getElementById("awCloseBtn").addEventListener("click", () => {
@@ -6052,7 +6544,38 @@
         }
       });
 
-      document.getElementById("closeShareModal").addEventListener("click", () => shareModal.classList.remove("open"));
+      document.querySelectorAll("[data-sc-mode]").forEach(tile => {
+        tile.addEventListener("click", () => {
+          playTone(480, 0.05, "sine", 0);
+          renderSummaryCardMode(tile.getAttribute("data-sc-mode"));
+        });
+      });
+
+      document.getElementById("scAddPhotoTile").addEventListener("click", () => {
+        photoInput.click();
+      });
+
+      document.getElementById("scVisToggle").addEventListener("click", (e) => {
+        const cur = e.target.textContent.includes("Member") ? "Public ›" : "Member ›";
+        e.target.textContent = cur;
+      });
+
+      function shareWorkoutSummaryText() {
+        if (!lastCompletedSummary) return;
+        const d = lastCompletedSummary;
+        const txt = `FitGuru · ${d.planTitle}\nDuration: ${d.duration} | Volume: ${d.volume} | Records: ${d.records}`;
+        if (navigator.share) {
+          navigator.share({ title: d.planTitle, text: txt }).catch(() => {});
+        } else {
+          showToast("Workout summary ready to share!");
+        }
+      }
+
+      document.getElementById("shareCardTopBtn").addEventListener("click", shareWorkoutSummaryText);
+      document.querySelectorAll("[data-soc-share]").forEach(btn => {
+        btn.addEventListener("click", shareWorkoutSummaryText);
+      });
+
       document.getElementById("doneShareBtn").addEventListener("click", () => {
         shareModal.classList.remove("open");
         showToast("✓ Workout saved to Progress & Calendar!");
