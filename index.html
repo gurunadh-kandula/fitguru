@@ -1690,6 +1690,83 @@
       background: rgba(16, 185, 129, 0.12);
     }
 
+    .edit-slot-card {
+      background: var(--surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 9px;
+    }
+
+    .edit-slot-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .edit-slot-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .edit-mini-btns {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .edit-mini-btn {
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 7px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .edit-mini-btn.danger {
+      color: #fda4af;
+      border-color: rgba(244, 63, 94, 0.35);
+    }
+
+    .edit-slot-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .edit-scheme-input {
+      background: #111520;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 8px;
+      border-radius: 8px;
+      width: 112px;
+    }
+
+    .edit-select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
 
     /* JEFIT PROGRESS TAB (IMG_8120, 8121, 8122, 8123) */
     .prof-header {
@@ -2648,6 +2725,21 @@
       margin-left: 4px;
     }
 
+    .aw-wakelock-pill {
+      background: rgba(16, 185, 129, 0.22);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
     .aw-hero.collapsed .aw-compact-vitals {
       display: flex;
     }
@@ -3330,7 +3422,10 @@
             <div class="day-meta" id="dayMeta">Est. 44m · 5 exercises · Yoga Mat</div>
             <div class="day-badge" id="dayBadge">Knee Push-Ups + 3s Slow Floor Press</div>
           </div>
-          <button class="pill-btn" id="expandAllBtn">Expand Sets</button>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <button class="pill-btn" id="editDayPlanBtn" style="border-color:rgba(59,130,246,0.45);color:#93c5fd;">✏️ Edit</button>
+            <button class="pill-btn" id="expandAllBtn">Expand Sets</button>
+          </div>
         </div>
 
         <div class="exercise-list" id="exerciseList"></div>
@@ -3739,37 +3834,39 @@
             <div style="font-size:15px;font-weight:800;color:#fff;">Muscle Breakdown</div>
             <span class="j-chev">›</span>
           </div>
-          <div class="mb-bar">
+          <div class="mb-bar" id="mbBar">
             <div style="width:32%;background:#3b82f6;"></div>
             <div style="width:26%;background:#2563eb;"></div>
             <div style="width:20%;background:#1d4ed8;"></div>
             <div style="width:14%;background:#1e3a8a;"></div>
             <div style="width:8%;background:#272c3a;"></div>
           </div>
-          <div class="mb-legend">
+          <div class="mb-legend" id="mbLegend">
             <span><i class="mb-dot" style="background:#3b82f6;"></i>Biceps</span>
             <span><i class="mb-dot" style="background:#2563eb;"></i>Shoulders</span>
             <span><i class="mb-dot" style="background:#1d4ed8;"></i>Back</span>
             <span><i class="mb-dot" style="background:#1e3a8a;"></i>Triceps</span>
             <span><i class="mb-dot" style="background:#334155;"></i>Other</span>
           </div>
-          <div style="font-size:12px;color:#94a3b8;">This week</div>
+          <div style="font-size:12px;color:#94a3b8;" id="mbPeriodLbl">This week</div>
         </div>
 
         <!-- 3 Months 1RM Card (IMG_8122 & 8123) -->
         <div class="j-card">
           <div style="font-size:14px;font-weight:700;color:#94a3b8;margin-bottom:4px;">3 Months 1RM</div>
-          <div class="rm-row" data-rm-ex="reverseCrunch">
-            <span>Reverse Crunch</span>
-            <span class="rm-val" id="rmValCrunch">10 reps/set ›</span>
-          </div>
-          <div class="rm-row" data-rm-ex="hammerCurl">
-            <span>Dumbbell Hammer Curl</span>
-            <span class="rm-val" id="rmValHammer">7.8kgs ›</span>
-          </div>
-          <div class="rm-row" data-rm-ex="bicepCurl">
-            <span>Dumbbell Alternating Bicep Curl</span>
-            <span class="rm-val" id="rmValBicep">7kgs ›</span>
+          <div id="threeMonths1RmList">
+            <div class="rm-row" data-rm-ex="reverseCrunch">
+              <span>Reverse Crunch</span>
+              <span class="rm-val" id="rmValCrunch">10 reps/set ›</span>
+            </div>
+            <div class="rm-row" data-rm-ex="hammerCurl">
+              <span>Dumbbell Hammer Curl</span>
+              <span class="rm-val" id="rmValHammer">7.8kgs ›</span>
+            </div>
+            <div class="rm-row" data-rm-ex="bicepCurl">
+              <span>Dumbbell Alternating Bicep Curl</span>
+              <span class="rm-val" id="rmValBicep">7kgs ›</span>
+            </div>
           </div>
         </div>
 
@@ -4223,6 +4320,7 @@
                 <path d="M18 6L6 18M6 6l12 12"/>
               </svg>
             </button>
+            <span class="aw-wakelock-pill" id="awWakeLockPill" title="Prevents iPhone screen from auto-locking during workout">☀️ Awake</span>
             <div class="aw-compact-vitals">
               <span><span style="color:#f43f5e;">♥</span> <span id="awCompactHr">115</span></span>
               <span>🔥 <span id="awCompactKcal">17</span></span>
@@ -4528,6 +4626,46 @@
     </div>
   </div>
 
+  <!-- Day Workout Customizer Modal (Add / Remove / Reorder / Swap / Bench Upgrade) -->
+  <div class="modal-backdrop" id="editDayModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div>
+          <div style="font-size:17px;font-weight:800;" id="editDayModalTitle">Customize Wed Push</div>
+          <div style="font-size:12px;color:#94a3b8;">Reorder, edit sets/reps, swap, or add bench exercises anytime</div>
+        </div>
+        <button class="close-btn" id="closeEditDayModal">✕</button>
+      </div>
+
+      <div id="pushPresetSwitchBox" style="margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;">Quick Push Templates</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="pill-btn" id="presetNoBenchPushBtn" style="border-color:rgba(59,130,246,0.45);color:#93c5fd;">🏠 No-Bench Push (5 Exercises)</button>
+          <button class="emerald-btn" id="presetWithBenchPushBtn" style="font-size:12px;padding:6px 11px;border-radius:99px;">🏋️ With Bench Upgrade</button>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:6px;">Current Exercises (<span id="editDayCount">5</span>)</div>
+      <div id="editDaySlotsList"></div>
+
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:#6ee7b7;margin-bottom:6px;">+ Add Exercise from Library (Bench / Dumbbell / Mat)</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <select class="edit-select" id="editAddExSelect"></select>
+          <button class="primary-btn" id="editAddSelectedExBtn">Add</button>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">Or Create Custom Exercise Name</div>
+        <div class="input-row" style="margin-top:0;">
+          <input class="input-box" id="editCustomExInput" placeholder="e.g., Flat Dumbbell Chest Press" />
+          <button class="pill-btn" id="editAddCustomNameBtn">+ Custom</button>
+        </div>
+      </div>
+
+      <button class="primary-btn" style="width:100%;padding:13px;font-size:15px;margin-top:14px;" id="doneEditDayBtn">Done & Save Routine</button>
+    </div>
+  </div>
+
   <!-- Apple Watch & History Storage Modal -->
   <div class="modal-backdrop" id="watchModal">
     <div class="modal-sheet">
@@ -4810,6 +4948,66 @@
           ],
           mistake: "Arching your lower back as the weights reach overhead."
         },
+        dbBenchPress: {
+          id: "dbBenchPress",
+          name: "Dumbbell Bench Press",
+          muscle: "Chest",
+          target: "Pectorals, Front Delts & Triceps (Bench)",
+          sets: 4,
+          reps: 10,
+          defaultWeight: "5 kg",
+          rest: 90,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/26.gif",
+          photo: "https://cdn.jefit.com/assets/img/exercises/gifs/26.gif",
+          topCue: "Shoulder Blades Retracted on Bench",
+          bottomCue: "45° Elbow Tuck · Full Chest Stretch",
+          cues: [
+            "Sit on your flat gym bench with dumbbells on thighs, then lie back pressing weights over mid-chest.",
+            "Pull shoulder blades together into the bench pad and lower dumbbells with elbows tucked at ~45 degrees.",
+            "Press smoothly back up until dumbbells nearly touch over your chest."
+          ],
+          mistake: "Flaring elbows straight out to 90 degrees or bouncing weights at the bottom."
+        },
+        dbInclinePress: {
+          id: "dbInclinePress",
+          name: "Dumbbell Incline Bench Press",
+          muscle: "Chest",
+          target: "Upper Chest & Anterior Deltoids (Incline Bench)",
+          sets: 4,
+          reps: 10,
+          defaultWeight: "5 kg",
+          rest: 90,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/31.gif",
+          photo: "https://cdn.jefit.com/assets/img/exercises/gifs/31.gif",
+          topCue: "30°–45° Bench Incline",
+          bottomCue: "Lower to Upper Chest",
+          cues: [
+            "Set your adjustable gym bench to a 30–45 degree incline and plant feet firmly on the floor.",
+            "Lower dumbbells with control toward your upper chest while keeping wrists stacked over elbows.",
+            "Drive dumbbells upward in a slight arc until arms are extended."
+          ],
+          mistake: "Setting the bench angle too steep (60°+), which shifts load off upper chest onto front delts."
+        },
+        dbFly: {
+          id: "dbFly",
+          name: "Dumbbell Fly",
+          muscle: "Chest",
+          target: "Pectoral Stretch & Chest Isolation (Bench)",
+          sets: 3,
+          reps: 12,
+          defaultWeight: "5 kg",
+          rest: 60,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/41.gif",
+          photo: "https://cdn.jefit.com/assets/img/exercises/gifs/41.gif",
+          topCue: "Soft Slight Elbow Bend",
+          bottomCue: "Wide Arc · Controlled Squeeze",
+          cues: [
+            "Lie flat on your bench holding dumbbells above your chest with palms facing each other and a soft bend in elbows.",
+            "Open arms wide in a controlled arc until you feel a comfortable stretch across your chest.",
+            "Squeeze your chest to bring the dumbbells back together along the same arc."
+          ],
+          mistake: "Dropping elbows too deep below bench level or straightening arms completely."
+        },
         floorPress: {
           id: "floorPress",
           name: "Dumbbell Floor Press",
@@ -5059,8 +5257,8 @@
           reps: 50,
           defaultWeight: "5.0 km",
           rest: 0,
-          gif: "https://fitnessprogramer.com/wp-content/uploads/2021/09/Briskly-Walking.gif",
-          photo: "https://s7ap1.scene7.com/is/image/aia/GettyImages-1279356186?qlt=85&wid=1600&ts=1670470160029&dpr=off",
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/322.gif",
+          photo: "https://cdn.jefit.com/assets/img/exercises/gifs/322.gif",
           topCue: "5.5–6.2 km/h Outdoor Pace",
           bottomCue: "Active Arm Swing · Apple Watch",
           cues: [
@@ -5088,7 +5286,20 @@
           schedule: [
             { section: "Mon · Pull (Back & Biceps)", short: "Pull", muscleType: "pull", badge: "Tue / Thu / Sat: 5 km Outdoor Walk (Active Recovery)", items: ["deadlift", "row", "bicepCurl", "hammerCurl", "reverseCrunch"] },
             { section: "Tue · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
-            { section: "Wed · Push (Yoga Mat)", short: "Push", muscleType: "push", badge: "Knee Push-Ups + 3s Slow Floor Press", items: ["kneePushup", "floorPress", "shoulderPress", "lateralRaise", "tricepExt"] },
+            {
+              section: "Push",
+              short: "Push",
+              muscleType: "push",
+              badge: "No-Bench Push Day · Tap ✏️ Edit to swap or add bench lifts later",
+              items: ["shoulderPress", "uprightRow", "tricepExt", "hammerCurl", "lateralRaise"],
+              defaultSlots: [
+                { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
+                { exId: "uprightRow", sets: 4, repScheme: [12, 9, 9, 9] },
+                { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] },
+                { exId: "hammerCurl", sets: 4, repScheme: [15, 9, 9, 9] },
+                { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] }
+              ]
+            },
             { section: "Thu · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
             { section: "Fri · Legs & Ab Roller", short: "Legs", muscleType: "legs", badge: "Wall-Assisted Ab Roller (2–3 ft Stopper)", items: ["squat", "lunge", "abRoller", "legRaise"] },
             { section: "Sat · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
@@ -5333,6 +5544,7 @@
         soundOn: true,
         expandedAll: false,
         customPlan: {},
+        editedDayPlans: {},
         weights: {},
         completedSets: {},
         customReps: {},
@@ -5341,6 +5553,7 @@
         waistLogs: [{ date: "Start", val: 90 }],
         habits: {},
         historyLog: [],
+        completedWorkouts: [],
         planConfig: { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" }
       };
 
@@ -5350,6 +5563,8 @@
           const parsed = JSON.parse(saved);
           state = Object.assign(state, parsed);
           if (!Array.isArray(state.historyLog)) state.historyLog = [];
+          if (!Array.isArray(state.completedWorkouts)) state.completedWorkouts = [];
+          if (!state.editedDayPlans || typeof state.editedDayPlans !== "object") state.editedDayPlans = {};
           if (!state.planConfig) state.planConfig = { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" };
           if (!state.activePlanId || !FULL_PLANS[state.activePlanId]) state.activePlanId = "homeRecomp";
         }
@@ -5363,14 +5578,76 @@
         return FULL_PLANS[state.activePlanId] || FULL_PLANS.homeRecomp;
       }
 
+      function getDayExerciseSlots(day) {
+        const key = `${state.activePlanId}_${day}`;
+        if (Array.isArray(state.editedDayPlans[key])) {
+          return state.editedDayPlans[key].map(s => {
+            const ex = EXERCISES[s.exId] || { sets: 3, reps: 10 };
+            const setsCount = Math.max(1, parseInt(s.sets, 10) || ex.sets || 3);
+            const scheme = Array.isArray(s.repScheme) && s.repScheme.length > 0
+              ? s.repScheme.slice(0, setsCount)
+              : Array.from({ length: setsCount }, () => parseInt(s.reps, 10) || ex.reps || 10);
+            while (scheme.length < setsCount) scheme.push(scheme[scheme.length - 1] || 10);
+            return { exId: s.exId, sets: setsCount, repScheme: scheme };
+          });
+        }
+        const idx = DAY_KEYS.indexOf(day);
+        const plan = getCurrentPlanObj();
+        const slot = plan.schedule[idx >= 0 ? idx : 0];
+        let baseSlots;
+        if (Array.isArray(slot.defaultSlots)) {
+          baseSlots = slot.defaultSlots.map(s => ({
+            exId: s.exId,
+            sets: s.sets,
+            repScheme: s.repScheme.slice()
+          }));
+        } else {
+          baseSlots = (slot.items || []).map(exId => {
+            const ex = EXERCISES[exId] || { sets: 3, reps: 10 };
+            return {
+              exId,
+              sets: ex.sets,
+              repScheme: Array.from({ length: ex.sets }, () => ex.reps)
+            };
+          });
+        }
+        const extra = state.customPlan[key] || [];
+        extra.forEach(exId => {
+          const ex = EXERCISES[exId] || { sets: 3, reps: 12 };
+          baseSlots.push({
+            exId,
+            sets: ex.sets,
+            repScheme: Array.from({ length: ex.sets }, () => ex.reps)
+          });
+        });
+        return baseSlots;
+      }
+
+      function getDayExerciseIds(day) {
+        return getDayExerciseSlots(day).map(s => s.exId);
+      }
+
+      function formatSlotRepSummary(slot, isWalk) {
+        if (isWalk) {
+          const mins = slot.repScheme[0] || 50;
+          return `${slot.sets} × ${mins} min`;
+        }
+        const allSame = slot.repScheme.every(v => v === slot.repScheme[0]);
+        if (allSame) {
+          return `${slot.sets} × ${slot.repScheme[0]} reps`;
+        }
+        return `${slot.sets} × ${slot.repScheme.join(",")} reps`;
+      }
+
       function getDayPlan(day) {
         const idx = DAY_KEYS.indexOf(day);
         const plan = getCurrentPlanObj();
         const slot = plan.schedule[idx >= 0 ? idx : 0];
-        const count = slot.items.length;
+        const slots = getDayExerciseSlots(day);
+        const count = slots.length;
         const meta = count === 0
           ? "Mobility, Whey & 7–8h Sleep"
-          : (slot.items[0] === "briskWalk" ? "Est. 50m, 5.0 km outdoor pace" : `Est. ${count * 8 + 4}m, ${count} exercises`);
+          : (slots[0].exId === "briskWalk" ? "Est. 50m, 5.0 km outdoor pace" : `Est. ${count * 8 + 4}m, ${count} exercises`);
         return {
           short: slot.short,
           title: slot.section,
@@ -5379,7 +5656,7 @@
           meta,
           badge: slot.badge,
           muscleType: slot.muscleType,
-          items: slot.items
+          items: slots.map(s => s.exId)
         };
       }
 
@@ -5444,16 +5721,19 @@
 
       function syncExerciseToHistory(day, exId, idx) {
         const ex = EXERCISES[exId] || { id: exId, name: exId, sets: 3, reps: 12, defaultWeight: "5 kg" };
+        const slots = getDayExerciseSlots(day);
+        const slotObj = slots[idx] || { sets: ex.sets, repScheme: Array.from({ length: ex.sets }, () => ex.reps) };
+        const totalSets = slotObj.sets;
         const wKey = `${state.activePlanId}_${day}_${exId}_${idx}`;
         const curWeight = state.weights[wKey] || ex.defaultWeight;
         let doneSets = 0;
-        let lastReps = ex.reps;
+        let lastReps = slotObj.repScheme[0] || ex.reps;
 
-        for (let s = 1; s <= ex.sets; s++) {
+        for (let s = 1; s <= totalSets; s++) {
           const setKey = `${wKey}_s${s}`;
           if (state.completedSets[setKey]) {
             doneSets++;
-            lastReps = state.customReps[setKey] || ex.reps;
+            lastReps = state.customReps[setKey] || slotObj.repScheme[s - 1] || ex.reps;
           }
         }
 
@@ -5475,7 +5755,7 @@
         const volKg = isWalk ? 0 : Math.round((parseFloat(curWeight) || 0) * 2 * lastReps * doneSets);
         const summary = isWalk
           ? `${curWeight} Outdoor Walk (${lastReps} min)`
-          : `${ex.name}: ${doneSets}/${ex.sets} sets × ${lastReps} reps @ ${curWeight}`;
+          : `${ex.name}: ${doneSets}/${totalSets} sets × ${lastReps} reps @ ${curWeight}`;
 
         state.historyLog.unshift({
           id: Date.now(),
@@ -5637,13 +5917,12 @@
       document.getElementById("subDetails").addEventListener("click", openDayDetailsTab);
 
       function isDayCompleted(day) {
-        const ids = getDayExerciseIds(day);
-        if (ids.length === 0) return false;
+        const slots = getDayExerciseSlots(day);
+        if (slots.length === 0) return false;
         let checkedAny = false;
-        ids.forEach((exId, idx) => {
-          const ex = EXERCISES[exId] || { sets: 1 };
-          const wKey = `${state.activePlanId}_${day}_${exId}_${idx}`;
-          for (let s = 1; s <= ex.sets; s++) {
+        slots.forEach((slotObj, idx) => {
+          const wKey = `${state.activePlanId}_${day}_${slotObj.exId}_${idx}`;
+          for (let s = 1; s <= slotObj.sets; s++) {
             if (state.completedSets[`${wKey}_s${s}`]) checkedAny = true;
           }
         });
@@ -5693,13 +5972,7 @@
         });
       }
 
-      function getDayExerciseIds(day) {
-        const planDay = getDayPlan(day);
-        const base = planDay.items.slice();
-        const customKey = `${state.activePlanId}_${day}`;
-        const extra = state.customPlan[customKey] || [];
-        return base.concat(extra);
-      }
+
 
       function renderDayStrip() {
         const strip = document.getElementById("dayStrip");
@@ -5731,31 +6004,37 @@
         document.getElementById("dayBadge").textContent = plan.badge;
 
         const container = document.getElementById("exerciseList");
-        const ids = getDayExerciseIds(day);
+        const slots = getDayExerciseSlots(day);
         const noteBox = document.getElementById("autoSyncNote");
 
-        if (ids.length === 0) {
+        if (slots.length === 0) {
           noteBox.style.display = "none";
           container.innerHTML = `<div class="panel-card" style="margin:6px 0;">
             <div class="panel-title">Complete Rest & Muscle Repair Day</div>
             <div class="panel-sub">No weights or long walks needed today. Focus on protein, hydration, and 7–8 hours of sleep so your muscles recover stronger.</div>
-            <button class="primary-btn" id="jumpHabitsBtn">Check Daily Recovery Habits ›</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="primary-btn" id="jumpHabitsBtn">Check Daily Recovery Habits ›</button>
+              <button class="pill-btn" id="restAddExQuickBtn">+ Add Exercises to ${day}</button>
+            </div>
           </div>`;
           const jBtn = document.getElementById("jumpHabitsBtn");
           if (jBtn) jBtn.addEventListener("click", () => switchNav("progress"));
+          const rAddBtn = document.getElementById("restAddExQuickBtn");
+          if (rAddBtn) rAddBtn.addEventListener("click", () => openEditDayModal());
           return;
         }
 
         noteBox.style.display = "flex";
 
-        container.innerHTML = ids.map((exId, idx) => {
+        container.innerHTML = slots.map((slotObj, idx) => {
+          const exId = slotObj.exId;
           const ex = EXERCISES[exId] || {
             id: exId,
             name: exId,
             muscle: "General",
             target: "Custom Movement",
-            sets: 3,
-            reps: 12,
+            sets: slotObj.sets || 3,
+            reps: slotObj.repScheme[0] || 12,
             defaultWeight: "5 kg",
             rest: 60,
             gif: FALLBACK_SVG,
@@ -5771,25 +6050,26 @@
           let doneCount = 0;
           let setsHtml = "";
 
-          for (let s = 1; s <= ex.sets; s++) {
+          for (let s = 1; s <= slotObj.sets; s++) {
             const setKey = `${wKey}_s${s}`;
             const isDone = !!state.completedSets[setKey];
             if (isDone) doneCount++;
-            const repsVal = state.customReps[setKey] || ex.reps;
+            const defaultSetReps = slotObj.repScheme[s - 1] || ex.reps;
+            const repsVal = state.customReps[setKey] || defaultSetReps;
             const unitLabel = ex.id === "briskWalk" ? "min" : "reps";
             setsHtml += `<div class="set-row ${isDone ? "done" : ""}">
               <div class="set-num">${ex.id === "briskWalk" ? "Walk" : "Set " + s}</div>
               <div class="rep-ctrl">
-                <button class="rep-btn" data-rep-delta="-1" data-set-key="${setKey}">-</button>
+                <button class="rep-btn" data-rep-delta="-1" data-default-rep="${defaultSetReps}" data-set-key="${setKey}">-</button>
                 <span>${repsVal} ${unitLabel}</span>
-                <button class="rep-btn" data-rep-delta="1" data-set-key="${setKey}">+</button>
+                <button class="rep-btn" data-rep-delta="1" data-default-rep="${defaultSetReps}" data-set-key="${setKey}">+</button>
               </div>
               <div style="font-size:11px;color:#94a3b8;font-weight:700;">${curWeight}</div>
               <span style="font-size:11px;font-weight:700;color:${isDone ? "#34d399" : "#64748b"};text-align:right;">${isDone ? "Done ✓" : "Target"}</span>
             </div>`;
           }
 
-          const allDone = doneCount === ex.sets;
+          const allDone = doneCount === slotObj.sets;
           const expandedClass = (state.expandedAll || ex.id === "briskWalk") ? "expanded" : "";
 
           const isWalk = ex.id === "briskWalk";
@@ -5815,9 +6095,9 @@
               <div class="ex-info" data-toggle-expand="${wKey}">
                 <div class="ex-name">${ex.name}</div>
                 <div class="ex-sub">
-                  <span>${ex.sets} × ${ex.reps} ${isWalk ? "min" : "reps"}</span>
+                  <span>${formatSlotRepSummary(slotObj, isWalk)}</span>
                   <span class="weight-tag">${curWeight}</span>
-                  ${doneCount > 0 ? `<span style="color:#34d399;font-weight:700;">${doneCount}/${ex.sets} logged</span>` : ""}
+                  ${doneCount > 0 ? `<span style="color:#34d399;font-weight:700;">${doneCount}/${slotObj.sets} logged</span>` : ""}
                 </div>
               </div>
               <div class="card-actions">
@@ -5830,7 +6110,15 @@
               ${setsHtml}
             </div>
           </div>`;
-        }).join("");
+        }).join("") + `
+          <button class="compare-outline-btn" id="inlineCustomizeDayBtn" style="width:100%;margin:4px 0 2px;padding:11px;font-size:13px;">
+            ✏️ Customize / Swap ${day} Exercises (Add Bench Lifts Later)
+          </button>`;
+
+        const inlineCustBtn = document.getElementById("inlineCustomizeDayBtn");
+        if (inlineCustBtn) {
+          inlineCustBtn.addEventListener("click", () => openEditDayModal());
+        }
 
         container.querySelectorAll("[data-toggle-expand]").forEach(el => {
           el.addEventListener("click", () => {
@@ -5868,7 +6156,7 @@
           btn.addEventListener("click", () => {
             const sKey = btn.getAttribute("data-set-key");
             const delta = parseInt(btn.getAttribute("data-rep-delta"), 10);
-            const defaultVal = sKey.includes("briskWalk") ? 50 : 10;
+            const defaultVal = parseInt(btn.getAttribute("data-default-rep"), 10) || (sKey.includes("briskWalk") ? 50 : 10);
             const cur = state.customReps[sKey] || defaultVal;
             state.customReps[sKey] = Math.max(1, cur + delta);
             saveState();
@@ -5940,21 +6228,56 @@
         restBar.classList.remove("visible");
       });
 
-      // FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER + DASHLINE TABS + REST TIMER + SUMMARY (v14)
+      // FULL-SCREEN JEFIT ACTIVE WORKOUT PLAYER + WAKE LOCK + WALL-CLOCK TIMERS (v15)
       const awOverlay = document.getElementById("activeWorkoutOverlay");
       const shareModal = document.getElementById("shareWorkoutModal");
+      let awSessionStartTime = 0;
       let awSessionSec = 0;
       let awSessionTick = null;
       let awExList = [];
       let awExIdx = 0;
       let awRestTotal = 90;
       let awRestLeft = 0;
+      let awRestEndTime = 0;
       let awRestTick = null;
+      let awWarned15 = false;
+      let awLastBeepSec = -1;
       let awIsExerciseTransitionRest = false;
       let awIntervalMode = false;
       let awHeartRate = 111;
       let awCalories = 17;
       let lastCompletedSummary = null;
+      let screenWakeLock = null;
+
+      async function requestWorkoutWakeLock() {
+        const pill = document.getElementById("awWakeLockPill");
+        try {
+          if ("wakeLock" in navigator) {
+            if (screenWakeLock) return;
+            screenWakeLock = await navigator.wakeLock.request("screen");
+            if (pill) {
+              pill.textContent = "☀️ Screen On";
+              pill.style.display = "inline-flex";
+            }
+            screenWakeLock.addEventListener("release", () => {
+              screenWakeLock = null;
+            });
+          } else if (pill) {
+            pill.textContent = "⏱ Real-Time";
+          }
+        } catch (e) {
+          if (pill) pill.textContent = "⏱ Real-Time";
+        }
+      }
+
+      function releaseWorkoutWakeLock() {
+        try {
+          if (screenWakeLock) {
+            screenWakeLock.release();
+            screenWakeLock = null;
+          }
+        } catch (e) {}
+      }
 
       function getRestDurationForEx(ex) {
         if (!ex) return 90;
@@ -5962,7 +6285,7 @@
         if (awIntervalMode) return 45;
         if (typeof ex.rest === "number" && ex.rest > 0) return ex.rest;
         if (ex.id === "hammerCurl" || ex.id === "bicepCurl") return 75; // 1 min 15 secs
-        return 90; // 1 min 30 secs default like IMG_8135_2
+        return 90; // 1 min 30 secs default
       }
 
       function getTargetRangeText(ex) {
@@ -6000,6 +6323,9 @@
           awRestTick = null;
         }
         awRestLeft = 0;
+        awRestEndTime = 0;
+        awWarned15 = false;
+        awLastBeepSec = -1;
         awIsExerciseTransitionRest = false;
 
         const banner = document.getElementById("awRestBanner");
@@ -6021,11 +6347,48 @@
         }
       }
 
+      function syncAwRestFromClock() {
+        if (!awRestEndTime) return;
+        const remainingMs = awRestEndTime - Date.now();
+        const remainingSec = Math.max(0, Math.ceil(remainingMs / 1000));
+        awRestLeft = remainingSec;
+
+        const banner = document.getElementById("awRestBanner");
+        const digits = document.getElementById("awRestDigits");
+        const fill = document.getElementById("awRestFill");
+        const lbl = document.getElementById("awRestLbl");
+
+        // Trigger 15-second warning once when crossing <= 15s (even if screen woke at 14s)
+        if (!awWarned15 && remainingSec <= 15 && remainingSec > 0) {
+          awWarned15 = true;
+          banner.classList.add("warning-15");
+          lbl.textContent = "15s left · Get ready";
+          playTone(880, 0.14, "sine", 0);
+          playTone(880, 0.18, "sine", 0.16);
+          try { if (navigator.vibrate) navigator.vibrate([100, 60, 100]); } catch (e) {}
+          speak("Timer is about to finish, 15 seconds left.");
+        } else if (remainingSec <= 3 && remainingSec > 0 && awLastBeepSec !== remainingSec) {
+          awLastBeepSec = remainingSec;
+          playTone(740, 0.08, "sine", 0);
+        }
+
+        if (remainingSec <= 0) {
+          stopAwRestTimer(true);
+        } else {
+          digits.textContent = formatSec(remainingSec);
+          const pct = Math.max(0, Math.min(100, (remainingMs / (awRestTotal * 1000)) * 100));
+          fill.style.width = `${pct}%`;
+        }
+      }
+
       function startAwRestTimer(seconds, isNextExerciseTransition) {
         if (!seconds || seconds <= 0) return;
         if (awRestTick) clearInterval(awRestTick);
         awRestTotal = seconds;
         awRestLeft = seconds;
+        awRestEndTime = Date.now() + seconds * 1000;
+        awWarned15 = false;
+        awLastBeepSec = -1;
         awIsExerciseTransitionRest = !!isNextExerciseTransition;
 
         const banner = document.getElementById("awRestBanner");
@@ -6050,30 +6413,33 @@
           speak(`Exercise complete. Moving to ${nextEx.name}. Resting ${seconds} seconds before Set 1.`);
         }
 
-        awRestTick = setInterval(() => {
-          awRestLeft--;
-
-          // 15-second warning sound + voice announcement
-          if (awRestLeft === 15) {
-            banner.classList.add("warning-15");
-            lbl.textContent = "15s left · Get ready";
-            playTone(880, 0.14, "sine", 0);
-            playTone(880, 0.18, "sine", 0.16);
-            try { if (navigator.vibrate) navigator.vibrate([100, 60, 100]); } catch (e) {}
-            speak("Timer is about to finish, 15 seconds left.");
-          } else if (awRestLeft <= 3 && awRestLeft > 0) {
-            playTone(740, 0.08, "sine", 0);
-          }
-
-          if (awRestLeft <= 0) {
-            stopAwRestTimer(true);
-          } else {
-            digits.textContent = formatSec(awRestLeft);
-            const pct = Math.max(0, Math.min(100, (awRestLeft / awRestTotal) * 100));
-            fill.style.width = `${pct}%`;
-          }
-        }, 1000);
+        awRestTick = setInterval(syncAwRestFromClock, 250);
       }
+
+      // Sync wall-clock timers & re-acquire Wake Lock if phone screen turns back on or app returns to foreground
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && awOverlay.classList.contains("open")) {
+          if (awSessionStartTime) {
+            awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
+          }
+          if (awRestEndTime > 0) {
+            syncAwRestFromClock();
+          }
+          requestWorkoutWakeLock();
+        }
+      });
+
+      window.addEventListener("pageshow", () => {
+        if (awOverlay.classList.contains("open")) {
+          if (awSessionStartTime) {
+            awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
+          }
+          if (awRestEndTime > 0) {
+            syncAwRestFromClock();
+          }
+          requestWorkoutWakeLock();
+        }
+      });
 
       function renderActiveWorkoutPlayer() {
         const cur = awExList[awExIdx];
@@ -6129,7 +6495,7 @@
 
         // Find first incomplete set to highlight in blue
         const activeSetIdx = cur.sets.findIndex(s => !s.done);
-        const isResting = awRestLeft > 0;
+        const isResting = awRestEndTime > 0 && awRestLeft > 0;
         const setsBox = document.getElementById("awSetsContainer");
         setsBox.innerHTML = cur.sets.map((s, sIdx) => {
           const isCurrent = sIdx === activeSetIdx;
@@ -6246,24 +6612,26 @@
 
       function openActiveWorkoutPlayer(forcedStartIdx) {
         const day = state.activeDay;
-        const ids = getDayExerciseIds(day);
-        if (ids.length === 0) {
-          showToast("Today is a Rest day! Pick Mon, Wed, or Fri to start lifting.");
+        const slots = getDayExerciseSlots(day);
+        if (slots.length === 0) {
+          showToast("Today is a Rest day! Tap ✏️ Edit to add exercises or pick a workout day.");
           return;
         }
 
-        awExList = ids.map((exId, idx) => {
-          const ex = EXERCISES[exId] || { id: exId, name: exId, sets: 3, reps: 10, defaultWeight: "5 kg", rest: 90, gif: FALLBACK_SVG };
+        awExList = slots.map((slotObj, idx) => {
+          const exId = slotObj.exId;
+          const ex = EXERCISES[exId] || { id: exId, name: exId, sets: slotObj.sets || 3, reps: slotObj.repScheme[0] || 10, defaultWeight: "5 kg", rest: 90, gif: FALLBACK_SVG };
           const wKey = `${state.activePlanId}_${day}_${exId}_${idx}`;
           const savedW = state.weights[wKey] || ex.defaultWeight;
           const numW = parseFloat(savedW) || 0;
           const sets = [];
-          for (let s = 1; s <= ex.sets; s++) {
+          for (let s = 1; s <= slotObj.sets; s++) {
             const setKey = `${wKey}_s${s}`;
+            const defaultSetReps = slotObj.repScheme[s - 1] || ex.reps;
             sets.push({
               weightNum: numW,
               weightLabel: savedW,
-              reps: state.customReps[setKey] || ex.reps,
+              reps: state.customReps[setKey] || defaultSetReps,
               done: !!state.completedSets[setKey]
             });
           }
@@ -6277,18 +6645,20 @@
           if (awExIdx < 0) awExIdx = 0;
         }
 
+        awSessionStartTime = Date.now();
         awSessionSec = 0;
         awHeartRate = 111;
         awCalories = 17;
         if (awSessionTick) clearInterval(awSessionTick);
         awSessionTick = setInterval(() => {
-          awSessionSec++;
+          awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
         }, 1000);
 
         document.getElementById("awHero").classList.remove("collapsed");
         document.getElementById("awMoreMenu").classList.remove("open");
         stopAwRestTimer(false);
         awOverlay.classList.add("open");
+        requestWorkoutWakeLock();
         chimeSetDone();
         announceCurrentTargetSet(`Starting ${day} workout. Start your rep!`);
       }
@@ -6343,7 +6713,6 @@
               </div>
             </div>`;
         } else {
-          // Default "list" card matching IMG_8138_3
           card.innerHTML = `
             <div class="share-card-title" id="scWorkoutTitle">${d.planTitle}</div>
             <div class="share-card-stats">
@@ -6366,7 +6735,11 @@
 
       function finishActiveWorkoutSession() {
         if (awSessionTick) clearInterval(awSessionTick);
+        if (awSessionStartTime) {
+          awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
+        }
         stopAwRestTimer(false);
+        releaseWorkoutWakeLock();
         awOverlay.classList.remove("open");
 
         const hrs = Math.floor(awSessionSec / 3600);
@@ -6402,9 +6775,91 @@
           </div>`;
         }).join("");
 
+        const now = new Date();
+        const isoDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+        const dateTitle = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        const shortProgDate = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        const startedTimeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).toLowerCase().replace(" ", "");
+        const durMins = Math.max(1, Math.round(awSessionSec / 60));
+
+        const detailedExercises = awExList
+          .filter(item => item.sets.some(s => s.done))
+          .map(item => {
+            const doneSets = item.sets.filter(s => s.done);
+            let exBestRm = 0;
+            const setsArr = doneSets.map((s, sIdx) => {
+              const wNum = s.weightNum || 0;
+              const rNum = s.reps || 0;
+              const rm = item.ex.id === "briskWalk" ? 0 : wNum * (1 + rNum / 30);
+              const isPr = rm > exBestRm;
+              if (rm > exBestRm) exBestRm = rm;
+              const oneRmStr = item.ex.id === "briskWalk"
+                ? "10:00/km"
+                : (wNum > 0 ? `${rm.toFixed(2).replace(/\.00$/, "")}kgs` : `${rNum} reps`);
+              return {
+                set: sIdx + 1,
+                weight: item.ex.id === "briskWalk" ? s.weightLabel : (wNum > 0 ? `${wNum} kgs` : "Bodyweight"),
+                weightNum: wNum,
+                reps: rNum,
+                oneRm: oneRmStr,
+                pr: isPr
+              };
+            });
+            return {
+              exId: item.ex.id,
+              name: item.ex.name,
+              muscle: item.ex.muscle || "General",
+              best1Rm: exBestRm,
+              maxReps: Math.max(...doneSets.map(s => s.reps || 0)),
+              sets: setsArr
+            };
+          });
+
         const planTitle = getDayPlan(state.activeDay).fullTitle;
         const recCount = Math.max(1, Math.min(3, completedExCount));
         const topRmStr = best1Rm > 0 ? best1Rm.toFixed(1) : "7.0";
+
+        if (detailedExercises.length > 0) {
+          const sessionRecord = {
+            id: Date.now(),
+            isoDate,
+            dayNum: now.getDate(),
+            dateTitle,
+            shortProgDate,
+            startedAt: `started at ${startedTimeStr}`,
+            dayKey: state.activeDay,
+            planTitle,
+            durationSec: awSessionSec,
+            durationShort: `${durMins}m`,
+            durationFormatted: durFormatted,
+            volumeKg: totalVol,
+            calories: awCalories,
+            avgHr: awHeartRate,
+            records: recCount,
+            frontHighlight: state.activeDay === "Fri" ? "legs" : "upper",
+            exercises: detailedExercises
+          };
+          state.completedWorkouts.unshift(sessionRecord);
+
+          // Also post a workout completion milestone to Activity feed
+          state.activityPosts.unshift({
+            id: `post_wk_${Date.now()}`,
+            timeAgo: "Just now",
+            caption: `Completed ${state.activeDay} · ${planTitle}!`,
+            title: `${planTitle} Complete`,
+            points: "+15 iron points",
+            desc: `${detailedExercises.length} exercises · ${totalVol.toLocaleString()} kgs lifted · ${durMins}m`,
+            medalType: "milestone",
+            likes: 0,
+            liked: false,
+            comments: []
+          });
+          if (state.activityPosts.length > 15) state.activityPosts.pop();
+          saveState();
+        }
+
+        // Refresh Progress tab immediately in the background
+        renderProgress();
 
         lastCompletedSummary = {
           planTitle,
@@ -6417,7 +6872,7 @@
           rowsHtml
         };
 
-        const workoutNumber = Math.max(4, 3 + state.historyLog.length);
+        const workoutNumber = 4 + state.completedWorkouts.length;
         document.getElementById("scWorkoutBadge").textContent = `${getOrdinalSuffix(workoutNumber)} workout`;
         document.getElementById("scThumbPr").textContent = `${topRmStr}kgs`;
         renderSummaryCardMode("list");
@@ -6432,7 +6887,7 @@
       document.getElementById("startWorkoutBtn").addEventListener("click", () => openActiveWorkoutPlayer());
 
       document.getElementById("awPrimaryActionBtn").addEventListener("click", () => {
-        if (awRestLeft > 0) {
+        if (awRestEndTime > 0 && awRestLeft > 0) {
           stopAwRestTimer(true);
         } else {
           const cur = awExList[awExIdx];
@@ -6443,14 +6898,22 @@
       });
 
       document.getElementById("awRestMinus15").addEventListener("click", () => {
-        awRestLeft = Math.max(1, awRestLeft - 15);
-        document.getElementById("awRestDigits").textContent = formatSec(awRestLeft);
+        if (!awRestEndTime) return;
+        awRestEndTime = Math.max(Date.now() + 1000, awRestEndTime - 15000);
+        syncAwRestFromClock();
       });
 
       document.getElementById("awRestPlus15").addEventListener("click", () => {
-        awRestLeft += 15;
-        awRestTotal = Math.max(awRestTotal, awRestLeft);
-        document.getElementById("awRestDigits").textContent = formatSec(awRestLeft);
+        if (!awRestEndTime) return;
+        awRestEndTime += 15000;
+        const newLeft = Math.ceil((awRestEndTime - Date.now()) / 1000);
+        awRestTotal = Math.max(awRestTotal, newLeft);
+        if (newLeft > 15) {
+          awWarned15 = false;
+          document.getElementById("awRestBanner").classList.remove("warning-15");
+          document.getElementById("awRestLbl").textContent = awIsExerciseTransitionRest ? "Next Exercise Rest" : "Rest";
+        }
+        syncAwRestFromClock();
       });
 
       document.getElementById("awRestPresetBtn").addEventListener("click", () => {
@@ -6540,6 +7003,7 @@
         } else {
           if (awSessionTick) clearInterval(awSessionTick);
           stopAwRestTimer(false);
+          releaseWorkoutWakeLock();
           awOverlay.classList.remove("open");
         }
       });
@@ -6578,6 +7042,8 @@
 
       document.getElementById("doneShareBtn").addEventListener("click", () => {
         shareModal.classList.remove("open");
+        switchNav("progress");
+        switchProgressSubTab("overview");
         showToast("✓ Workout saved to Progress & Calendar!");
       });
 
@@ -6993,19 +7459,17 @@
         });
       }
 
-      document.getElementById("addCustomExBtn").addEventListener("click", () => {
-        const name = document.getElementById("customExName").value.trim();
-        if (!name) return;
+      function registerCustomExerciseItem(name) {
         const id = "custom_" + Date.now();
         EXERCISES[id] = {
           id,
           name,
           muscle: "Custom",
           target: "Custom Exercise",
-          sets: 3,
-          reps: 12,
+          sets: 4,
+          reps: 10,
           defaultWeight: "5 kg",
-          rest: 60,
+          rest: 90,
           gif: FALLBACK_SVG,
           photo: FALLBACK_SVG,
           topCue: "3s Controlled Tempo",
@@ -7013,14 +7477,266 @@
           cues: ["Perform smoothly with braced core and steady breathing."],
           mistake: "Using momentum instead of muscular control."
         };
-        const customKey = `${state.activePlanId}_${state.activeDay}`;
-        if (!state.customPlan[customKey]) state.customPlan[customKey] = [];
-        state.customPlan[customKey].push(id);
+        const key = `${state.activePlanId}_${state.activeDay}`;
+        const currentSlots = getDayExerciseSlots(state.activeDay);
+        currentSlots.push({ exId: id, sets: 4, repScheme: [10, 10, 10, 10] });
+        state.editedDayPlans[key] = currentSlots;
         saveState();
+        return id;
+      }
+
+      document.getElementById("addCustomExBtn").addEventListener("click", () => {
+        const name = document.getElementById("customExName").value.trim();
+        if (!name) return;
+        registerCustomExerciseItem(name);
         document.getElementById("customExName").value = "";
         switchNav("workout");
         openDayDetailsTab();
         renderDayWorkout();
+        showToast(`✓ Added "${name}" to ${state.activeDay}`);
+      });
+
+      // DAY EXERCISE CUSTOMIZER MODAL (Edit / Swap / Reorder / Bench Upgrade)
+      const editDayModal = document.getElementById("editDayModal");
+      let workingEditSlots = [];
+
+      function populateEditAddSelect() {
+        const sel = document.getElementById("editAddExSelect");
+        const orderGroups = ["Chest", "Shoulders", "Arms", "Back", "Legs", "Core", "Cardio", "Stretch", "Custom"];
+        let optsHtml = "";
+        orderGroups.forEach(group => {
+          const groupExs = Object.values(EXERCISES).filter(e => e.muscle === group);
+          if (groupExs.length === 0) return;
+          optsHtml += `<optgroup label="${group}">`;
+          groupExs.forEach(e => {
+            const benchTag = (e.id === "dbBenchPress" || e.id === "dbInclinePress" || e.id === "dbFly") ? " [Bench]" : "";
+            optsHtml += `<option value="${e.id}">${e.name}${benchTag}</option>`;
+          });
+          optsHtml += `</optgroup>`;
+        });
+        sel.innerHTML = optsHtml;
+      }
+
+      function renderEditDaySlots() {
+        const listEl = document.getElementById("editDaySlotsList");
+        document.getElementById("editDayCount").textContent = workingEditSlots.length;
+
+        if (workingEditSlots.length === 0) {
+          listEl.innerHTML = `<div style="font-size:12px;color:#94a3b8;background:var(--surface-2);padding:12px;border-radius:12px;margin-bottom:8px;">
+            No exercises on ${state.activeDay} yet. Pick an exercise below or tap a Push preset above.
+          </div>`;
+          return;
+        }
+
+        const allExOptions = Object.values(EXERCISES);
+
+        listEl.innerHTML = workingEditSlots.map((slot, idx) => {
+          const ex = EXERCISES[slot.exId] || { name: slot.exId };
+          const schemeStr = slot.repScheme.every(v => v === slot.repScheme[0])
+            ? String(slot.repScheme[0])
+            : slot.repScheme.join(",");
+
+          const swapOptionsHtml = allExOptions.map(opt => {
+            const benchTag = (opt.id === "dbBenchPress" || opt.id === "dbInclinePress" || opt.id === "dbFly") ? " [Bench]" : "";
+            return `<option value="${opt.id}" ${opt.id === slot.exId ? "selected" : ""}>${opt.name}${benchTag}</option>`;
+          }).join("");
+
+          return `<div class="edit-slot-card">
+            <div class="edit-slot-top">
+              <div class="edit-slot-title">${idx + 1}. ${ex.name}</div>
+              <div class="edit-mini-btns">
+                <button class="edit-mini-btn" data-edit-up="${idx}" ${idx === 0 ? "disabled style='opacity:0.4;'" : ""}>↑</button>
+                <button class="edit-mini-btn" data-edit-down="${idx}" ${idx === workingEditSlots.length - 1 ? "disabled style='opacity:0.4;'" : ""}>↓</button>
+                <button class="edit-mini-btn danger" data-edit-del="${idx}">✕</button>
+              </div>
+            </div>
+            <div style="margin-bottom:8px;">
+              <select class="edit-select" style="padding:6px 9px;font-size:12px;" data-edit-swap="${idx}" title="Swap Exercise">
+                ${swapOptionsHtml}
+              </select>
+            </div>
+            <div class="edit-slot-controls">
+              <div class="rep-ctrl" style="font-size:12px;">
+                <span style="color:#94a3b8;">Sets:</span>
+                <button class="rep-btn" data-edit-sets-delta="-1" data-slot-idx="${idx}">-</button>
+                <span>${slot.sets}</span>
+                <button class="rep-btn" data-edit-sets-delta="1" data-slot-idx="${idx}">+</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:700;">Reps:</span>
+                <input class="edit-scheme-input" data-edit-scheme="${idx}" value="${schemeStr}" placeholder="e.g. 10 or 12,9,9,9" />
+              </div>
+            </div>
+          </div>`;
+        }).join("");
+
+        listEl.querySelectorAll("[data-edit-up]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const i = parseInt(btn.getAttribute("data-edit-up"), 10);
+            if (i <= 0) return;
+            const tmp = workingEditSlots[i - 1];
+            workingEditSlots[i - 1] = workingEditSlots[i];
+            workingEditSlots[i] = tmp;
+            renderEditDaySlots();
+          });
+        });
+
+        listEl.querySelectorAll("[data-edit-down]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const i = parseInt(btn.getAttribute("data-edit-down"), 10);
+            if (i >= workingEditSlots.length - 1) return;
+            const tmp = workingEditSlots[i + 1];
+            workingEditSlots[i + 1] = workingEditSlots[i];
+            workingEditSlots[i] = tmp;
+            renderEditDaySlots();
+          });
+        });
+
+        listEl.querySelectorAll("[data-edit-del]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const i = parseInt(btn.getAttribute("data-edit-del"), 10);
+            workingEditSlots.splice(i, 1);
+            renderEditDaySlots();
+          });
+        });
+
+        listEl.querySelectorAll("[data-edit-swap]").forEach(sel => {
+          sel.addEventListener("change", () => {
+            const i = parseInt(sel.getAttribute("data-edit-swap"), 10);
+            const newExId = sel.value;
+            const newEx = EXERCISES[newExId] || { sets: 4, reps: 10 };
+            workingEditSlots[i].exId = newExId;
+            workingEditSlots[i].sets = newEx.sets;
+            workingEditSlots[i].repScheme = Array.from({ length: newEx.sets }, () => newEx.reps);
+            renderEditDaySlots();
+          });
+        });
+
+        listEl.querySelectorAll("[data-edit-sets-delta]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const i = parseInt(btn.getAttribute("data-slot-idx"), 10);
+            const delta = parseInt(btn.getAttribute("data-edit-sets-delta"), 10);
+            const sObj = workingEditSlots[i];
+            const nextSets = Math.max(1, Math.min(6, sObj.sets + delta));
+            sObj.sets = nextSets;
+            while (sObj.repScheme.length < nextSets) {
+              sObj.repScheme.push(sObj.repScheme[sObj.repScheme.length - 1] || 10);
+            }
+            sObj.repScheme = sObj.repScheme.slice(0, nextSets);
+            renderEditDaySlots();
+          });
+        });
+
+        listEl.querySelectorAll("[data-edit-scheme]").forEach(inp => {
+          inp.addEventListener("change", () => {
+            const i = parseInt(inp.getAttribute("data-edit-scheme"), 10);
+            const sObj = workingEditSlots[i];
+            const parts = inp.value.split(",").map(x => parseInt(x.trim(), 10)).filter(n => n > 0);
+            if (parts.length === 1) {
+              sObj.repScheme = Array.from({ length: sObj.sets }, () => parts[0]);
+            } else if (parts.length > 1) {
+              sObj.sets = Math.min(6, parts.length);
+              sObj.repScheme = parts.slice(0, 6);
+            }
+            renderEditDaySlots();
+          });
+        });
+      }
+
+      function openEditDayModal() {
+        const day = state.activeDay;
+        const plan = getDayPlan(day);
+        document.getElementById("editDayModalTitle").textContent = `Customize ${day} · ${plan.fullTitle}`;
+        document.getElementById("pushPresetSwitchBox").style.display = day === "Wed" ? "block" : "none";
+        workingEditSlots = getDayExerciseSlots(day).map(s => ({
+          exId: s.exId,
+          sets: s.sets,
+          repScheme: s.repScheme.slice()
+        }));
+        populateEditAddSelect();
+        renderEditDaySlots();
+        editDayModal.classList.add("open");
+      }
+
+      document.getElementById("editDayPlanBtn").addEventListener("click", openEditDayModal);
+      document.getElementById("closeEditDayModal").addEventListener("click", () => editDayModal.classList.remove("open"));
+      editDayModal.addEventListener("click", (e) => { if (e.target === editDayModal) editDayModal.classList.remove("open"); });
+
+      document.getElementById("presetNoBenchPushBtn").addEventListener("click", () => {
+        workingEditSlots = [
+          { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
+          { exId: "uprightRow", sets: 4, repScheme: [12, 9, 9, 9] },
+          { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] },
+          { exId: "hammerCurl", sets: 4, repScheme: [15, 9, 9, 9] },
+          { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] }
+        ];
+        renderEditDaySlots();
+        showToast("Loaded No-Bench Push (5 exercises)");
+      });
+
+      document.getElementById("presetWithBenchPushBtn").addEventListener("click", () => {
+        workingEditSlots = [
+          { exId: "dbBenchPress", sets: 4, repScheme: [10, 10, 10, 10] },
+          { exId: "dbInclinePress", sets: 4, repScheme: [10, 10, 10, 10] },
+          { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
+          { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] },
+          { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] }
+        ];
+        renderEditDaySlots();
+        showToast("Loaded Bench Push Upgrade!");
+      });
+
+      document.getElementById("editAddSelectedExBtn").addEventListener("click", () => {
+        const exId = document.getElementById("editAddExSelect").value;
+        const ex = EXERCISES[exId] || { sets: 4, reps: 10 };
+        workingEditSlots.push({
+          exId,
+          sets: ex.sets,
+          repScheme: Array.from({ length: ex.sets }, () => ex.reps)
+        });
+        renderEditDaySlots();
+      });
+
+      document.getElementById("editAddCustomNameBtn").addEventListener("click", () => {
+        const raw = document.getElementById("editCustomExInput").value.trim();
+        if (!raw) return;
+        const id = "custom_" + Date.now();
+        EXERCISES[id] = {
+          id,
+          name: raw,
+          muscle: "Custom",
+          target: "Custom Exercise",
+          sets: 4,
+          reps: 10,
+          defaultWeight: "5 kg",
+          rest: 90,
+          gif: FALLBACK_SVG,
+          photo: FALLBACK_SVG,
+          topCue: "3s Controlled Tempo",
+          bottomCue: "Full Range of Motion",
+          cues: ["Perform smoothly with braced core and steady breathing."],
+          mistake: "Using momentum instead of muscular control."
+        };
+        workingEditSlots.push({ exId: id, sets: 4, repScheme: [10, 10, 10, 10] });
+        document.getElementById("editCustomExInput").value = "";
+        populateEditAddSelect();
+        renderEditDaySlots();
+      });
+
+      document.getElementById("doneEditDayBtn").addEventListener("click", () => {
+        const key = `${state.activePlanId}_${state.activeDay}`;
+        state.editedDayPlans[key] = workingEditSlots.map(s => ({
+          exId: s.exId,
+          sets: s.sets,
+          repScheme: s.repScheme.slice()
+        }));
+        saveState();
+        editDayModal.classList.remove("open");
+        chimeSetDone();
+        renderDayStrip();
+        renderDayWorkout();
+        if (document.getElementById("overviewBox").style.display === "block") renderTimelineOverview();
+        showToast(`✓ Saved ${state.activeDay} exercises!`);
       });
 
       // Tempo Coach (3-1-1)
@@ -7507,7 +8223,34 @@
         const iso = `2026-11-${String(dayNum).padStart(2, "0")}`;
         const dateTitle = `Nov ${dayNum}, 2026`;
 
-        // Check if user logged sets dynamically in state.historyLog on this date
+        // 1. Check completed full workout sessions on this date
+        const matchingSessions = (state.completedWorkouts || []).filter(w => w.isoDate === iso || w.dayNum === dayNum);
+        if (matchingSessions.length > 0) {
+          const latest = matchingSessions[0];
+          let totalVol = 0;
+          let totalCal = 0;
+          let totalRecs = 0;
+          const mergedExercises = [];
+          matchingSessions.forEach(sess => {
+            totalVol += sess.volumeKg || 0;
+            totalCal += sess.calories || 0;
+            totalRecs += sess.records || 1;
+            (sess.exercises || []).forEach(exItem => mergedExercises.push(exItem));
+          });
+          return {
+            dateTitle: latest.dateTitle || dateTitle,
+            startedAt: latest.startedAt || "started at 6:15pm",
+            duration: latest.durationShort || "44m",
+            volumeKg: totalVol,
+            calories: totalCal,
+            avgHr: latest.avgHr || 122,
+            records: totalRecs,
+            frontHighlight: latest.frontHighlight || "upper",
+            exercises: mergedExercises
+          };
+        }
+
+        // 2. Check individual set logs in state.historyLog on this date
         const userEntries = state.historyLog.filter(item => item.autoKey && item.autoKey.startsWith(iso));
         if (userEntries.length > 0) {
           let totalVol = 0;
@@ -7706,7 +8449,8 @@
         // November 2026 starts on Sunday (0 blanks) and has 30 days
         const loggedSet = new Set([11, 12, 16, 18]);
         extraLoggedDays.forEach(d => loggedSet.add(d));
-        const todayNum = 18;
+        const now = new Date();
+        const todayNum = (now.getFullYear() === 2026 && now.getMonth() === 10) ? now.getDate() : 25;
         let cells = "";
         for (let d = 1; d <= 30; d++) {
           const cls = ["cal-day"];
@@ -8067,19 +8811,89 @@
           }
         });
 
-        const totalPoints = 328 + (state.historyLog.length * 10) + (state.bonusPoints || 0);
+        let completedSessionsSec = 0;
+        const completedList = state.completedWorkouts || [];
+        completedList.forEach(sess => {
+          completedSessionsSec += sess.durationSec || 0;
+          if (sess.isoDate && sess.isoDate.startsWith("2026-11-")) {
+            const dPart = parseInt(sess.isoDate.slice(8, 10), 10);
+            if (dPart) extraCalDays.push(dPart);
+          } else if (sess.dayNum) {
+            extraCalDays.push(sess.dayNum);
+          }
+        });
+
+        if (completedList.length > 0 && completedList[0].shortProgDate) {
+          document.getElementById("progIndexDate").textContent = completedList[0].shortProgDate;
+        } else {
+          const nowD = new Date();
+          document.getElementById("progIndexDate").textContent = nowD.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        }
+
+        const totalPoints = 328 + (state.historyLog.length * 10) + (completedList.length * 15) + (state.bonusPoints || 0);
         document.getElementById("ironPointsVal").textContent = totalPoints;
 
         const weekVol = 3032 + Math.round(savedVol);
         document.getElementById("ovVolumeVal").textContent = `${weekVol.toLocaleString()} kgs`;
 
-        const totalMins = 91 + (state.historyLog.length * 12);
+        const extraMins = completedSessionsSec > 0
+          ? Math.max(1, Math.round(completedSessionsSec / 60))
+          : (state.historyLog.length * 12);
+        const totalMins = 91 + extraMins;
         const hrs = Math.floor(totalMins / 60);
         const mins = totalMins % 60;
         document.getElementById("ovTimeVal").textContent = `${hrs}h ${mins}m`;
 
-        document.getElementById("calTotalSessions").textContent = 4 + state.historyLog.length;
+        const uniqueNewDays = new Set(extraCalDays.filter(d => ![11, 12, 16, 18].includes(d)));
+        document.getElementById("calTotalSessions").textContent = 4 + uniqueNewDays.size + completedList.length;
         renderNovemberCalendar(extraCalDays);
+
+        // Update 3 Months 1RM & Muscle Breakdown from latest completed workout if available
+        if (completedList.length > 0) {
+          const latestExs = completedList[0].exercises || [];
+          const rmListEl = document.getElementById("threeMonths1RmList");
+          if (rmListEl && latestExs.length > 0) {
+            rmListEl.innerHTML = latestExs.slice(0, 4).map(exItem => {
+              const valLabel = exItem.exId === "briskWalk"
+                ? `${exItem.maxReps || 50} mins ›`
+                : (exItem.best1Rm > 0 ? `${exItem.best1Rm.toFixed(1).replace(/\.0$/, "")}kgs ›` : `${exItem.maxReps || 10} reps/set ›`);
+              return `<div class="rm-row" data-rm-ex="${exItem.exId}">
+                <span>${exItem.name}</span>
+                <span class="rm-val">${valLabel}</span>
+              </div>`;
+            }).join("");
+            rmListEl.querySelectorAll("[data-rm-ex]").forEach(row => {
+              row.addEventListener("click", () => openFormModal(row.getAttribute("data-rm-ex")));
+            });
+          }
+
+          // Update Muscle Breakdown bar dynamically across completed workouts
+          const muscleCounts = {};
+          let totalSetsCount = 0;
+          completedList.forEach(s => {
+            (s.exercises || []).forEach(exItem => {
+              const m = exItem.muscle || "Other";
+              const c = (exItem.sets || []).length || 1;
+              muscleCounts[m] = (muscleCounts[m] || 0) + c;
+              totalSetsCount += c;
+            });
+          });
+          if (totalSetsCount > 0) {
+            const palette = ["#3b82f6", "#2563eb", "#1d4ed8", "#1e3a8a", "#334155"];
+            const sortedMuscles = Object.entries(muscleCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const mbBar = document.getElementById("mbBar");
+            const mbLegend = document.getElementById("mbLegend");
+            if (mbBar && mbLegend) {
+              mbBar.innerHTML = sortedMuscles.map(([, cnt], i) => {
+                const pct = Math.max(8, Math.round((cnt / totalSetsCount) * 100));
+                return `<div style="width:${pct}%;background:${palette[i % palette.length]};"></div>`;
+              }).join("");
+              mbLegend.innerHTML = sortedMuscles.map(([mName], i) =>
+                `<span><i class="mb-dot" style="background:${palette[i % palette.length]};"></i>${mName}</span>`
+              ).join("");
+            }
+          }
+        }
 
         // Goals list inside Overview
         const gList = document.getElementById("exerciseGoalsList");
