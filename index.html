@@ -5550,20 +5550,25 @@
         "7–8 Hours Quality Sleep"
       ];
 
-      function getWeekStartIso(dateObj) {
-        const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-        const day = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-        const diffToMonday = day === 0 ? -6 : 1 - day;
-        d.setDate(d.getDate() + diffToMonday);
+      function getLocalIsoDate(dateObj) {
+        const d = dateObj || new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       }
 
+      function getWeekStartIso(dateObj) {
+        const base = dateObj || new Date();
+        const d = new Date(base.getFullYear(), base.getMonth(), base.getDate());
+        const day = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+        const diffToMonday = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diffToMonday);
+        return getLocalIsoDate(d);
+      }
+
       const STORAGE_KEY = "fitguru_state_v1";
-      const CURRENT_WEEK_ISO = getWeekStartIso(new Date());
       let state = {
         activeDay: "Wed",
         activePlanId: "homeRecomp",
-        weekStartIso: CURRENT_WEEK_ISO,
+        weekStartIso: "",
         cycleIdx: 0,
         soundOn: true,
         expandedAll: false,
@@ -5590,19 +5595,40 @@
           if (!Array.isArray(state.historyLog)) state.historyLog = [];
           if (!Array.isArray(state.completedWorkouts)) state.completedWorkouts = [];
           if (!state.editedDayPlans || typeof state.editedDayPlans !== "object") state.editedDayPlans = {};
+          if (!state.completedSets || typeof state.completedSets !== "object") state.completedSets = {};
           if (!state.githubSync || typeof state.githubSync !== "object") state.githubSync = { token: "", gistId: "", lastSync: "" };
           if (!state.planConfig) state.planConfig = { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" };
           if (!state.activePlanId || !FULL_PLANS[state.activePlanId]) state.activePlanId = "homeRecomp";
         }
       } catch (e) {}
 
+      function isSetCompletedThisWeek(setKey) {
+        const val = state.completedSets[setKey];
+        if (!val) return false;
+        const weekStart = getWeekStartIso(new Date());
+        // Only treat a set as logged in the current weekly planner if its logged date string is within this Mon-Sun week
+        return typeof val === "string" && val >= weekStart;
+      }
+
       function ensureCurrentWeekFreshChecklist(shouldRender) {
         const latestWeekIso = getWeekStartIso(new Date());
+        let changed = false;
+
+        // Purge any legacy boolean `true` entries (from pre-v21) or entries from prior weeks (< Monday of this week)
+        Object.keys(state.completedSets).forEach(k => {
+          const val = state.completedSets[k];
+          if (typeof val !== "string" || val < latestWeekIso) {
+            delete state.completedSets[k];
+            changed = true;
+          }
+        });
+
         if (state.weekStartIso !== latestWeekIso) {
-          // New Mon-Sun week started: clear previous week's checkmarks so upcoming days start fresh
-          // while preserving all dated History, Completed Workouts, Weights, and Custom Plans.
-          state.completedSets = {};
           state.weekStartIso = latestWeekIso;
+          changed = true;
+        }
+
+        if (changed) {
           saveState();
           if (shouldRender) {
             renderDayStrip();
@@ -5956,7 +5982,7 @@
 
         for (let s = 1; s <= totalSets; s++) {
           const setKey = `${wKey}_s${s}`;
-          if (state.completedSets[setKey]) {
+          if (isSetCompletedThisWeek(setKey)) {
             doneSets++;
             lastReps = state.customReps[setKey] || slotObj.repScheme[s - 1] || ex.reps;
           }
@@ -6151,7 +6177,7 @@
         slots.forEach((slotObj, idx) => {
           const wKey = `${state.activePlanId}_${day}_${slotObj.exId}_${idx}`;
           for (let s = 1; s <= slotObj.sets; s++) {
-            if (state.completedSets[`${wKey}_s${s}`]) checkedAny = true;
+            if (isSetCompletedThisWeek(`${wKey}_s${s}`)) checkedAny = true;
           }
         });
         return checkedAny;
@@ -6227,7 +6253,8 @@
       function renderDayWorkout() {
         const day = state.activeDay;
         const plan = getDayPlan(day);
-        document.getElementById("dayTitle").innerHTML = `<span>${day}</span> ${plan.fullTitle}`;
+        const cleanDayTitle = plan.fullTitle.replace(new RegExp(`^${day}\\s*[·:\\-]\\s*`, "i"), "");
+        document.getElementById("dayTitle").innerHTML = `<span>${day}</span> · ${cleanDayTitle}`;
         document.getElementById("dayMeta").textContent = plan.meta;
         document.getElementById("dayBadge").textContent = plan.badge;
 
@@ -6280,7 +6307,7 @@
 
           for (let s = 1; s <= slotObj.sets; s++) {
             const setKey = `${wKey}_s${s}`;
-            const isDone = !!state.completedSets[setKey];
+            const isDone = isSetCompletedThisWeek(setKey);
             if (isDone) doneCount++;
             const defaultSetReps = slotObj.repScheme[s - 1] || ex.reps;
             const repsVal = state.customReps[setKey] || defaultSetReps;
@@ -6875,7 +6902,7 @@
         state.weekStartIso = getWeekStartIso(new Date());
         state.weights[wKey] = sObj.weightLabel;
         state.customReps[setKey] = sObj.reps;
-        state.completedSets[setKey] = true;
+        state.completedSets[setKey] = getLocalIsoDate(new Date());
         syncExerciseToHistory(state.activeDay, ex.id, cur.planIdx);
         renderDayWorkout();
 
@@ -6926,7 +6953,7 @@
               weightNum: numW,
               weightLabel: savedW,
               reps: state.customReps[setKey] || defaultSetReps,
-              done: !!state.completedSets[setKey]
+              done: isSetCompletedThisWeek(setKey)
             });
           }
           return { ex, planIdx: idx, sets };
