@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fitguru-v19';
+const CACHE_NAME = 'fitguru-v20';
 const ASSETS = [
   './',
   './index.html',

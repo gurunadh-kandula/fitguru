@@ -4163,13 +4163,24 @@
           <div id="pushupLadder"></div>
         </div>
 
-        <!-- Backup & Restore Data -->
+        <!-- Backup & Restore Data + Optional GitHub Cloud Sync -->
         <div class="j-card">
-          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Backup & Restore Data</div>
-          <div style="font-size:12px;color:#94a3b8;margin-bottom:10px;">Copy a backup code anytime so you never lose your logs across devices</div>
-          <div style="display:flex;gap:8px;">
+          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">Backup, Restore & GitHub Sync</div>
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:10px;">GitHub Pages is static, so logs stay on your iPhone unless synced to a private GitHub Gist.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
             <button class="pill-btn" id="exportDataBtn">📋 Copy Backup Code</button>
             <button class="pill-btn" id="importDataBtn">📥 Restore Backup</button>
+          </div>
+          <div style="padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:12px;font-weight:700;color:#93c5fd;">🐙 GitHub Gist Cloud Sync</span>
+              <span id="ghSyncStatusTag" style="font-size:11px;color:#94a3b8;">Not connected</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="primary-btn" id="ghConnectBtn" style="font-size:12px;padding:7px 11px;">🔑 Connect Token</button>
+              <button class="emerald-btn" id="ghPushBtn" style="font-size:12px;padding:7px 11px;">☁️ Sync to GitHub</button>
+              <button class="pill-btn" id="ghPullBtn" style="font-size:12px;padding:7px 11px;">⬇️ Pull from GitHub</button>
+            </div>
           </div>
         </div>
       </div>
@@ -5539,10 +5550,20 @@
         "7–8 Hours Quality Sleep"
       ];
 
+      function getWeekStartIso(dateObj) {
+        const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        const day = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+        const diffToMonday = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diffToMonday);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      }
+
       const STORAGE_KEY = "fitguru_state_v1";
+      const CURRENT_WEEK_ISO = getWeekStartIso(new Date());
       let state = {
         activeDay: "Wed",
         activePlanId: "homeRecomp",
+        weekStartIso: CURRENT_WEEK_ISO,
         cycleIdx: 0,
         soundOn: true,
         expandedAll: false,
@@ -5557,6 +5578,7 @@
         habits: {},
         historyLog: [],
         completedWorkouts: [],
+        githubSync: { token: "", gistId: "", lastSync: "" },
         planConfig: { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" }
       };
 
@@ -5568,14 +5590,33 @@
           if (!Array.isArray(state.historyLog)) state.historyLog = [];
           if (!Array.isArray(state.completedWorkouts)) state.completedWorkouts = [];
           if (!state.editedDayPlans || typeof state.editedDayPlans !== "object") state.editedDayPlans = {};
+          if (!state.githubSync || typeof state.githubSync !== "object") state.githubSync = { token: "", gistId: "", lastSync: "" };
           if (!state.planConfig) state.planConfig = { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" };
           if (!state.activePlanId || !FULL_PLANS[state.activePlanId]) state.activePlanId = "homeRecomp";
         }
       } catch (e) {}
 
+      function ensureCurrentWeekFreshChecklist(shouldRender) {
+        const latestWeekIso = getWeekStartIso(new Date());
+        if (state.weekStartIso !== latestWeekIso) {
+          // New Mon-Sun week started: clear previous week's checkmarks so upcoming days start fresh
+          // while preserving all dated History, Completed Workouts, Weights, and Custom Plans.
+          state.completedSets = {};
+          state.weekStartIso = latestWeekIso;
+          saveState();
+          if (shouldRender) {
+            renderDayStrip();
+            renderDayWorkout();
+            if (document.getElementById("overviewBox").style.display === "block") renderTimelineOverview();
+          }
+        }
+      }
+
       function saveState() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
       }
+
+      ensureCurrentWeekFreshChecklist(false);
 
       function getCurrentPlanObj() {
         return FULL_PLANS[state.activePlanId] || FULL_PLANS.homeRecomp;
@@ -6667,6 +6708,9 @@
 
       // Sync wall-clock timers & re-acquire Wake Lock if phone screen turns back on or app returns to foreground
       document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          ensureCurrentWeekFreshChecklist(true);
+        }
         if (document.visibilityState === "visible" && awOverlay.classList.contains("open")) {
           if (awSessionStartTime) {
             awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
@@ -6828,6 +6872,7 @@
         // Sync to main state & dated history
         const wKey = `${state.activePlanId}_${state.activeDay}_${ex.id}_${cur.planIdx}`;
         const setKey = `${wKey}_s${sIdx + 1}`;
+        state.weekStartIso = getWeekStartIso(new Date());
         state.weights[wKey] = sObj.weightLabel;
         state.customReps[setKey] = sObj.reps;
         state.completedSets[setKey] = true;
@@ -7106,6 +7151,9 @@
           });
           if (state.activityPosts.length > 15) state.activityPosts.pop();
           saveState();
+          if (state.githubSync && state.githubSync.token) {
+            pushBackupToGitHubGist(true);
+          }
         }
 
         // Refresh Progress tab immediately in the background
@@ -9236,7 +9284,149 @@
             renderProgress();
           });
         });
+
+        const ghTag = document.getElementById("ghSyncStatusTag");
+        if (ghTag) {
+          if (state.githubSync && state.githubSync.token) {
+            ghTag.style.color = "#34d399";
+            ghTag.textContent = state.githubSync.lastSync ? `Synced · ${state.githubSync.lastSync}` : "Token connected";
+          } else {
+            ghTag.style.color = "#94a3b8";
+            ghTag.textContent = "Not connected";
+          }
+        }
       }
+
+      async function pushBackupToGitHubGist(silent) {
+        const gs = state.githubSync || {};
+        if (!gs.token) {
+          if (!silent) showToast("Tap 🔑 Connect Token first");
+          return;
+        }
+        const payloadState = Object.assign({}, state, {
+          githubSync: { token: "", gistId: gs.gistId || "", lastSync: gs.lastSync || "" }
+        });
+        const body = {
+          description: "FitGuru iPhone Workout History & Plan Backup",
+          public: false,
+          files: {
+            "fitguru-backup.json": {
+              content: JSON.stringify(payloadState, null, 2)
+            }
+          }
+        };
+        try {
+          const url = gs.gistId
+            ? `https://api.github.com/gists/${gs.gistId}`
+            : "https://api.github.com/gists";
+          const method = gs.gistId ? "PATCH" : "POST";
+          const res = await fetch(url, {
+            method,
+            headers: {
+              "Authorization": `Bearer ${gs.token}`,
+              "Accept": "application/vnd.github+json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) {
+            if (!silent) showToast(`GitHub sync failed (${res.status})`);
+            return;
+          }
+          const data = await res.json();
+          const nowStr = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+          state.githubSync.gistId = data.id || gs.gistId;
+          state.githubSync.lastSync = nowStr;
+          saveState();
+          renderProgress();
+          if (!silent) {
+            chimeSetDone();
+            showToast("✓ Synced history to GitHub Gist!");
+          }
+        } catch (e) {
+          if (!silent) showToast("Network error syncing to GitHub");
+        }
+      }
+
+      async function pullBackupFromGitHubGist() {
+        const gs = state.githubSync || {};
+        if (!gs.token) {
+          showToast("Tap 🔑 Connect Token first");
+          return;
+        }
+        try {
+          let targetGistId = gs.gistId;
+          if (!targetGistId) {
+            const listRes = await fetch("https://api.github.com/gists", {
+              headers: {
+                "Authorization": `Bearer ${gs.token}`,
+                "Accept": "application/vnd.github+json"
+              }
+            });
+            if (!listRes.ok) {
+              showToast(`GitHub fetch failed (${listRes.status})`);
+              return;
+            }
+            const gists = await listRes.json();
+            const found = (gists || []).find(g => g.files && g.files["fitguru-backup.json"]);
+            if (!found) {
+              showToast("No FitGuru backup Gist found yet");
+              return;
+            }
+            targetGistId = found.id;
+          }
+          const res = await fetch(`https://api.github.com/gists/${targetGistId}`, {
+            headers: {
+              "Authorization": `Bearer ${gs.token}`,
+              "Accept": "application/vnd.github+json"
+            }
+          });
+          if (!res.ok) {
+            showToast(`GitHub pull failed (${res.status})`);
+            return;
+          }
+          const gistData = await res.json();
+          const fileObj = gistData.files && gistData.files["fitguru-backup.json"];
+          if (!fileObj || !fileObj.content) {
+            showToast("Backup file empty in Gist");
+            return;
+          }
+          const parsed = JSON.parse(fileObj.content);
+          const keepToken = gs.token;
+          state = Object.assign(state, parsed);
+          state.githubSync = {
+            token: keepToken,
+            gistId: targetGistId,
+            lastSync: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
+          };
+          ensureCurrentWeekFreshChecklist(false);
+          saveState();
+          chimeSetDone();
+          renderDayStrip();
+          renderDayWorkout();
+          renderProgress();
+          showToast("✓ Pulled backup from GitHub!");
+        } catch (e) {
+          showToast("Error pulling backup from GitHub");
+        }
+      }
+
+      document.getElementById("ghConnectBtn").addEventListener("click", () => {
+        const cur = (state.githubSync && state.githubSync.token) || "";
+        const tok = prompt("Paste a GitHub Personal Access Token (with 'gist' scope) to enable private GitHub Gist sync:", cur);
+        if (tok === null) return;
+        state.githubSync = {
+          token: tok.trim(),
+          gistId: (state.githubSync && state.githubSync.gistId) || "",
+          lastSync: ""
+        };
+        saveState();
+        renderProgress();
+        showToast(tok.trim() ? "GitHub token saved on iPhone!" : "GitHub token cleared");
+      });
+
+      document.getElementById("ghPushBtn").addEventListener("click", () => pushBackupToGitHubGist(false));
+      document.getElementById("ghPullBtn").addEventListener("click", () => pullBackupFromGitHubGist());
 
       document.getElementById("saveWaistBtn").addEventListener("click", () => {
         const val = parseFloat(document.getElementById("waistInput").value);
