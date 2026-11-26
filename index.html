@@ -5610,11 +5610,73 @@
         return typeof val === "string" && val >= weekStart;
       }
 
+      function inferDayKeyFromIso(isoStr) {
+        if (!isoStr || isoStr.length < 10) return null;
+        const parts = isoStr.slice(0, 10).split("-").map(Number);
+        if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return null;
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        const map = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        return map[d.getDay()] || null;
+      }
+
+      function rehydrateCurrentWeekSetsFromLogs(latestWeekIso) {
+        let restored = false;
+
+        // 1. Rehydrate from dated historyLog entries within the current Mon-Sun week (>= latestWeekIso)
+        (state.historyLog || []).forEach(item => {
+          if (!item || typeof item.autoKey !== "string" || item.autoKey.length < 12) return;
+          const isoDay = item.autoKey.slice(0, 10);
+          if (isoDay < latestWeekIso) return;
+          const wKey = item.autoKey.slice(11);
+          if (!wKey) return;
+
+          let doneSets = 1;
+          const m = typeof item.summary === "string" && item.summary.match(/(\d+)\s*\/\s*(\d+)\s*sets/i);
+          if (m) {
+            doneSets = Math.max(1, parseInt(m[1], 10));
+          }
+          for (let s = 1; s <= doneSets; s++) {
+            const setKey = `${wKey}_s${s}`;
+            if (state.completedSets[setKey] !== isoDay) {
+              state.completedSets[setKey] = isoDay;
+              restored = true;
+            }
+          }
+        });
+
+        // 2. Rehydrate from completedWorkouts sessions within the current Mon-Sun week (>= latestWeekIso)
+        (state.completedWorkouts || []).forEach(sess => {
+          if (!sess || typeof sess.isoDate !== "string" || sess.isoDate < latestWeekIso) return;
+          const dayKey = sess.dayKey || inferDayKeyFromIso(sess.isoDate);
+          if (!dayKey || !Array.isArray(sess.exercises)) return;
+          const slots = getDayExerciseSlots(dayKey);
+          const usedSlotIndices = new Set();
+
+          sess.exercises.forEach(exItem => {
+            if (!exItem || !exItem.exId) return;
+            const slotIdx = slots.findIndex((sl, idx) => sl.exId === exItem.exId && !usedSlotIndices.has(idx));
+            if (slotIdx < 0) return;
+            usedSlotIndices.add(slotIdx);
+            const wKey = `${state.activePlanId}_${dayKey}_${exItem.exId}_${slotIdx}`;
+            const doneCount = Math.max(1, (exItem.sets && exItem.sets.length) || slots[slotIdx].sets || 1);
+            for (let s = 1; s <= doneCount; s++) {
+              const setKey = `${wKey}_s${s}`;
+              if (state.completedSets[setKey] !== sess.isoDate) {
+                state.completedSets[setKey] = sess.isoDate;
+                restored = true;
+              }
+            }
+          });
+        });
+
+        return restored;
+      }
+
       function ensureCurrentWeekFreshChecklist(shouldRender) {
         const latestWeekIso = getWeekStartIso(new Date());
         let changed = false;
 
-        // Purge any legacy boolean `true` entries (from pre-v21) or entries from prior weeks (< Monday of this week)
+        // Remove any legacy boolean `true` entries or entries from prior weeks (< Monday of this week)
         Object.keys(state.completedSets).forEach(k => {
           const val = state.completedSets[k];
           if (typeof val !== "string" || val < latestWeekIso) {
@@ -5622,6 +5684,11 @@
             changed = true;
           }
         });
+
+        // Re-populate this week's logged days (e.g. Mon & Wed of this week) from dated logs so they show as Logged ✓
+        if (rehydrateCurrentWeekSetsFromLogs(latestWeekIso)) {
+          changed = true;
+        }
 
         if (state.weekStartIso !== latestWeekIso) {
           state.weekStartIso = latestWeekIso;
@@ -8550,7 +8617,7 @@
         const dateTitle = `Nov ${dayNum}, 2026`;
 
         // 1. Check completed full workout sessions on this date
-        const matchingSessions = (state.completedWorkouts || []).filter(w => w.isoDate === iso || w.dayNum === dayNum);
+        const matchingSessions = (state.completedWorkouts || []).filter(w => w.isoDate === iso || (!w.isoDate && w.dayNum === dayNum));
         if (matchingSessions.length > 0) {
           const latest = matchingSessions[0];
           let totalVol = 0;
@@ -8583,21 +8650,33 @@
           const exBlocks = userEntries.map(entry => {
             totalVol += entry.volKg || 0;
             const namePart = entry.summary.split(":")[0].trim();
-            const matchedEx = Object.values(EXERCISES).find(e => e.name === namePart) || EXERCISES.shoulderPress;
+            const keyParts = (entry.autoKey || "").split("_");
+            const keyExId = keyParts.length >= 4 ? keyParts[3] : "";
+            const matchedEx = EXERCISES[keyExId]
+              || Object.values(EXERCISES).find(e => e.name.toLowerCase() === namePart.toLowerCase())
+              || (namePart.toLowerCase().includes("hammer") ? EXERCISES.hammerCurl : null)
+              || EXERCISES.shoulderPress;
+
+            const mDetail = entry.summary.match(/(\d+)\s*\/\s*(\d+)\s*sets\s*×\s*(\d+)\s*reps\s*@\s*(.+)$/i);
+            const setCount = mDetail ? Math.max(1, parseInt(mDetail[1], 10)) : matchedEx.sets;
+            const loggedReps = mDetail ? (parseInt(mDetail[3], 10) || matchedEx.reps) : matchedEx.reps;
+            const loggedWeight = mDetail ? mDetail[4].trim() : (matchedEx.defaultWeight || "5 kg");
+
             const setsArr = [];
-            for (let s = 1; s <= matchedEx.sets; s++) {
-              const w = matchedEx.defaultWeight || "5 kg";
-              const numW = parseFloat(w) || 5;
-              const oneRmVal = matchedEx.id === "briskWalk" ? "10:00/km" : `${(numW * (1 + matchedEx.reps / 30)).toFixed(2).replace(/\.00$/, "")}kgs`;
+            for (let s = 1; s <= setCount; s++) {
+              const numW = parseFloat(loggedWeight) || 0;
+              const oneRmVal = matchedEx.id === "briskWalk"
+                ? "10:00/km"
+                : (numW > 0 ? `${(numW * (1 + loggedReps / 30)).toFixed(2).replace(/\.00$/, "")}kgs` : `${loggedReps} reps`);
               setsArr.push({
                 set: s,
-                weight: matchedEx.id === "briskWalk" ? w : `${numW} kgs`,
-                reps: matchedEx.reps,
+                weight: matchedEx.id === "briskWalk" ? loggedWeight : (numW > 0 ? `${numW} kgs` : "Bodyweight"),
+                reps: loggedReps,
                 oneRm: oneRmVal,
                 pr: s === 1
               });
             }
-            return { exId: matchedEx.id, name: matchedEx.name, sets: setsArr };
+            return { exId: matchedEx.id, name: namePart || matchedEx.name, sets: setsArr };
           });
 
           return {
