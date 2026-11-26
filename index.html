@@ -4405,9 +4405,12 @@
         <div class="aw-rest-banner" id="awRestBanner">
           <div class="aw-rest-fill" id="awRestFill"></div>
           <button class="aw-rest-adj" id="awRestMinus15">-15s</button>
-          <div class="aw-rest-center">
-            <span class="aw-rest-digits" id="awRestDigits">01:08</span>
-            <span class="aw-rest-lbl" id="awRestLbl">Rest</span>
+          <div class="aw-rest-center" style="flex-direction:column;align-items:center;gap:1px;">
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span class="aw-rest-digits" id="awRestDigits">01:08</span>
+              <span class="aw-rest-lbl" id="awRestLbl">Rest</span>
+            </div>
+            <div id="awRestMusicTag" style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.92);letter-spacing:0.3px;">🎵 Rest Music · Background Audio</div>
           </div>
           <button class="aw-rest-adj" id="awRestPlus15">+15s</button>
         </div>
@@ -4806,10 +4809,10 @@
         },
         hammerCurl: {
           id: "hammerCurl",
-          name: "Dumbbell Alternating Hammer Curl",
+          name: "Dumbbell Hammer Curl",
           muscle: "Arms",
-          target: "Brachialis & Forearms",
-          sets: 3,
+          target: "Brachialis, Biceps & Forearms",
+          sets: 4,
           reps: 10,
           defaultWeight: "5 kg",
           rest: 60,
@@ -4818,11 +4821,11 @@
           topCue: "Neutral Thumb-Up Grip",
           bottomCue: "Zero Wrist Twist",
           cues: [
-            "Hold dumbbells at your sides with palms facing each other (neutral grip).",
-            "Curl toward your shoulder while keeping your upper arm completely stationary.",
+            "Hold dumbbells at your sides with palms facing each other (neutral thumb-up grip).",
+            "Curl smoothly toward your shoulders while keeping upper arms pinned to your ribs.",
             "Pause briefly at the top and control the descent back to full arm extension."
           ],
-          mistake: "Dropping the dumbbell too quickly—keep tension on the forearm during the descent."
+          mistake: "Dropping the dumbbell too quickly or swinging your elbows forward."
         },
         reverseCrunch: {
           id: "reverseCrunch",
@@ -5669,8 +5672,181 @@
         toastTimer = setTimeout(() => { t.style.display = "none"; }, 2400);
       }
 
-      // Web Audio + Voice Coach
+      // Web Audio + Background iOS Audio Session + Rest Music + Voice Coach
       let audioCtx = null;
+      let restMusicAudio = null;
+      let bgKeepAliveAudio = null;
+      let isRestMusicPlaying = false;
+      let musicDuckTimeout = null;
+      const REST_MUSIC_NORMAL_VOL = 0.52;
+      const REST_MUSIC_DUCK_VOL = 0.12;
+
+      function createWavBlobUrl(durationSec, sampleRate, renderSampleFn) {
+        const numSamples = Math.floor(durationSec * sampleRate);
+        const dataBytes = numSamples * 2;
+        const buffer = new ArrayBuffer(44 + dataBytes);
+        const view = new DataView(buffer);
+
+        function writeStr(offset, str) {
+          for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+        }
+        writeStr(0, "RIFF");
+        view.setUint32(4, 36 + dataBytes, true);
+        writeStr(8, "WAVE");
+        writeStr(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); // PCM
+        view.setUint16(22, 1, true); // Mono
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeStr(36, "data");
+        view.setUint32(40, dataBytes, true);
+
+        for (let i = 0; i < numSamples; i++) {
+          const t = i / sampleRate;
+          let sample = renderSampleFn(t, durationSec);
+          sample = Math.max(-0.98, Math.min(0.98, sample));
+          view.setInt16(44 + i * 2, Math.round(sample * 32767), true);
+        }
+        const blob = new Blob([buffer], { type: "audio/wav" });
+        return URL.createObjectURL(blob);
+      }
+
+      function initBackgroundAudioEngines() {
+        try {
+          if (!restMusicAudio) {
+            // 8-second seamless ambient chill chord progression (Fmaj7 -> Em7 -> Dm7 -> Cmaj7) + gentle pulse
+            const chords = [
+              [174.61, 220.00, 261.63, 329.63], // Fmaj7
+              [164.81, 196.00, 246.94, 293.66], // Em7
+              [146.83, 174.61, 220.00, 261.63], // Dm7
+              [130.81, 164.81, 196.00, 246.94]  // Cmaj7
+            ];
+            const restUrl = createWavBlobUrl(8.0, 22050, (t, total) => {
+              const barIdx = Math.min(3, Math.floor(t / 2.0));
+              const localT = t - barIdx * 2.0;
+              const chord = chords[barIdx];
+              // Smooth envelope at bar boundaries so there are zero clicks
+              const barEnv = Math.min(1, localT / 0.14) * Math.min(1, (2.0 - localT) / 0.14);
+              let pad = 0;
+              for (let c = 0; c < chord.length; c++) {
+                const f = chord[c];
+                pad += Math.sin(2 * Math.PI * f * t) * 0.11;
+                pad += Math.sin(2 * Math.PI * (f * 2) * t) * 0.025;
+              }
+              pad *= (0.75 + 0.25 * Math.sin(2 * Math.PI * 0.5 * t)) * barEnv;
+
+              // Soft rhythmic lo-fi pulse every 0.5s (120 BPM)
+              const beatPhase = t % 0.5;
+              const beatNum = Math.floor(t / 0.5) % 4;
+              const pulseEnv = Math.exp(-beatPhase * 18);
+              const pulseFreq = beatNum === 0 ? 110 : (beatNum === 2 ? 146.83 : 440);
+              const pulseAmp = (beatNum === 0 || beatNum === 2) ? 0.14 : 0.035;
+              const pulse = Math.sin(2 * Math.PI * pulseFreq * beatPhase) * pulseEnv * pulseAmp;
+
+              // Gentle bell arpeggio note on beat 1 & 3
+              const arpPhase = t % 1.0;
+              const arpNote = chord[(Math.floor(t) % chord.length)] * 2;
+              const arp = Math.sin(2 * Math.PI * arpNote * arpPhase) * Math.exp(-arpPhase * 5.5) * 0.07;
+
+              return pad + pulse + arp;
+            });
+            restMusicAudio = new Audio(restUrl);
+            restMusicAudio.loop = true;
+            restMusicAudio.setAttribute("playsinline", "");
+            restMusicAudio.preload = "auto";
+            restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+          }
+
+          if (!bgKeepAliveAudio) {
+            // Ultra-low-amplitude 2s loop that holds iOS background audio session open during active workout
+            const keepUrl = createWavBlobUrl(2.0, 8000, (t) => Math.sin(2 * Math.PI * 40 * t) * 0.0004);
+            bgKeepAliveAudio = new Audio(keepUrl);
+            bgKeepAliveAudio.loop = true;
+            bgKeepAliveAudio.setAttribute("playsinline", "");
+            bgKeepAliveAudio.preload = "auto";
+            bgKeepAliveAudio.volume = 0.02;
+          }
+        } catch (e) {}
+      }
+
+      function duckRestMusic(durationMs) {
+        if (!restMusicAudio || !isRestMusicPlaying) return;
+        restMusicAudio.volume = REST_MUSIC_DUCK_VOL;
+        if (musicDuckTimeout) clearTimeout(musicDuckTimeout);
+        musicDuckTimeout = setTimeout(() => {
+          if (restMusicAudio && isRestMusicPlaying) {
+            restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+          }
+        }, durationMs || 3200);
+      }
+
+      function startRestMusic() {
+        initBackgroundAudioEngines();
+        if (!state.soundOn) return;
+        try {
+          if (bgKeepAliveAudio && !bgKeepAliveAudio.paused) {
+            bgKeepAliveAudio.pause();
+          }
+          if (restMusicAudio) {
+            restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+            restMusicAudio.currentTime = 0;
+            const p = restMusicAudio.play();
+            if (p && p.catch) p.catch(() => {});
+            isRestMusicPlaying = true;
+          }
+        } catch (e) {}
+      }
+
+      function stopRestMusic(keepSessionAlive) {
+        isRestMusicPlaying = false;
+        if (musicDuckTimeout) {
+          clearTimeout(musicDuckTimeout);
+          musicDuckTimeout = null;
+        }
+        try {
+          if (restMusicAudio) {
+            restMusicAudio.pause();
+            restMusicAudio.currentTime = 0;
+          }
+          if (keepSessionAlive && state.soundOn) {
+            initBackgroundAudioEngines();
+            if (bgKeepAliveAudio && bgKeepAliveAudio.paused) {
+              const p = bgKeepAliveAudio.play();
+              if (p && p.catch) p.catch(() => {});
+            }
+          } else if (bgKeepAliveAudio) {
+            bgKeepAliveAudio.pause();
+          }
+        } catch (e) {}
+      }
+
+      function updateRestMediaSession(secondsLeft, nextExName, nextSetNum) {
+        try {
+          if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: `Rest ${formatSec(secondsLeft)} · FitGuru`,
+              artist: nextExName ? `Next: ${nextExName} (Set ${nextSetNum})` : "FitGuru Rest Timer",
+              album: "FitGuru Active Workout"
+            });
+            navigator.mediaSession.playbackState = isRestMusicPlaying ? "playing" : "none";
+          }
+        } catch (e) {}
+      }
+
+      function formatSpokenDuration(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        if (mins > 0 && secs > 0) {
+          return `${mins} ${mins === 1 ? "minute" : "minutes"} ${secs} ${secs === 1 ? "second" : "seconds"}`;
+        } else if (mins > 0) {
+          return `${mins} ${mins === 1 ? "minute" : "minutes"}`;
+        }
+        return `${secs} ${secs === 1 ? "second" : "seconds"}`;
+      }
+
       function playTone(freq, duration, type, delay) {
         if (!state.soundOn) return;
         try {
@@ -5683,7 +5859,7 @@
           osc.type = type || "sine";
           osc.frequency.value = freq;
           const t = audioCtx.currentTime + (delay || 0);
-          gain.gain.setValueAtTime(0.14, t);
+          gain.gain.setValueAtTime(0.16, t);
           gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -5694,13 +5870,21 @@
 
       function speak(text) {
         if (!state.soundOn) return;
+        const estMs = Math.max(2600, text.length * 75);
+        duckRestMusic(estMs);
         try {
           if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
             window.speechSynthesis.resume();
             const u = new SpeechSynthesisUtterance(text);
-            u.rate = 1.03;
+            u.rate = 1.02;
             u.pitch = 1.0;
+            u.volume = 1.0;
+            u.onend = () => {
+              if (restMusicAudio && isRestMusicPlaying) {
+                restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+              }
+            };
             window.speechSynthesis.speak(u);
           }
         } catch (e) {}
@@ -5867,8 +6051,11 @@
         saveState();
         updateSoundUI();
         if (state.soundOn) {
+          if (awRestEndTime > 0 && awRestLeft > 0) startRestMusic();
           chimeSetDone();
           speak("Audio and voice coach enabled");
+        } else {
+          stopRestMusic(false);
         }
       });
 
@@ -6317,16 +6504,40 @@
         speak(`${lead}${ex.name}, Set ${setNum}: ${rText} at ${wText}.`);
       }
 
+      // Dedicated Background Web Worker heartbeat so iOS does not throttle timer checks when switching apps
+      let bgTimerWorker = null;
+      try {
+        const workerBlob = new Blob([
+          "let iv = null;" +
+          "self.onmessage = function(e) {" +
+          "  if (e.data === 'start') { if (iv) clearInterval(iv); iv = setInterval(() => self.postMessage('tick'), 250); }" +
+          "  else if (e.data === 'stop') { if (iv) { clearInterval(iv); iv = null; } }" +
+          "};"
+        ], { type: "application/javascript" });
+        bgTimerWorker = new Worker(URL.createObjectURL(workerBlob));
+        bgTimerWorker.onmessage = function () {
+          if (awRestEndTime > 0) syncAwRestFromClock();
+        };
+      } catch (e) {}
+
       function stopAwRestTimer(announceStartRep) {
         if (awRestTick) {
           clearInterval(awRestTick);
           awRestTick = null;
+        }
+        if (bgTimerWorker) {
+          try { bgTimerWorker.postMessage("stop"); } catch (e) {}
         }
         awRestLeft = 0;
         awRestEndTime = 0;
         awWarned15 = false;
         awLastBeepSec = -1;
         awIsExerciseTransitionRest = false;
+
+        // Stop rest music so transition back to lifting is unmistakable; keep audio session alive while workout is open
+        const keepWorkoutAudio = awOverlay.classList.contains("open");
+        stopRestMusic(keepWorkoutAudio);
+        updateRestMediaSession(0, "", 1);
 
         const banner = document.getElementById("awRestBanner");
         banner.classList.remove("visible", "warning-15");
@@ -6343,10 +6554,11 @@
           playTone(880, 0.16, "sine", 0.14);
           playTone(1046.5, 0.25, "sine", 0.28);
           try { if (navigator.vibrate) navigator.vibrate([120, 80, 180]); } catch (e) {}
-          announceCurrentTargetSet("Start your rep!");
+          announceCurrentTargetSet("Rest over! Start your rep.");
         }
       }
 
+      let lastMediaSessionSec = -1;
       function syncAwRestFromClock() {
         if (!awRestEndTime) return;
         const remainingMs = awRestEndTime - Date.now();
@@ -6358,7 +6570,7 @@
         const fill = document.getElementById("awRestFill");
         const lbl = document.getElementById("awRestLbl");
 
-        // Trigger 15-second warning once when crossing <= 15s (even if screen woke at 14s)
+        // Trigger 15-second warning once when crossing <= 15s (works in foreground AND when switched to another app)
         if (!awWarned15 && remainingSec <= 15 && remainingSec > 0) {
           awWarned15 = true;
           banner.classList.add("warning-15");
@@ -6378,6 +6590,12 @@
           digits.textContent = formatSec(remainingSec);
           const pct = Math.max(0, Math.min(100, (remainingMs / (awRestTotal * 1000)) * 100));
           fill.style.width = `${pct}%`;
+          if (lastMediaSessionSec !== remainingSec) {
+            lastMediaSessionSec = remainingSec;
+            const cur = awExList[awExIdx];
+            const nextSetIdx = cur ? cur.sets.findIndex(s => !s.done) : 0;
+            updateRestMediaSession(remainingSec, cur ? cur.ex.name : "", nextSetIdx >= 0 ? nextSetIdx + 1 : 1);
+          }
         }
       }
 
@@ -6389,7 +6607,19 @@
         awRestEndTime = Date.now() + seconds * 1000;
         awWarned15 = false;
         awLastBeepSec = -1;
+        lastMediaSessionSec = -1;
         awIsExerciseTransitionRest = !!isNextExerciseTransition;
+
+        // Start chill ambient rest music immediately
+        startRestMusic();
+        if (restMusicAudio) {
+          restMusicAudio.ontimeupdate = () => {
+            if (awRestEndTime > 0) syncAwRestFromClock();
+          };
+        }
+        if (bgTimerWorker) {
+          try { bgTimerWorker.postMessage("start"); } catch (e) {}
+        }
 
         const banner = document.getElementById("awRestBanner");
         const digits = document.getElementById("awRestDigits");
@@ -6408,13 +6638,32 @@
         cta.classList.add("skip-mode");
         renderActiveWorkoutPlayer();
 
-        if (awIsExerciseTransitionRest && awExList[awExIdx]) {
-          const nextEx = awExList[awExIdx].ex;
-          speak(`Exercise complete. Moving to ${nextEx.name}. Resting ${seconds} seconds before Set 1.`);
+        // Announce rest duration right after logging the set!
+        const spokenDur = formatSpokenDuration(seconds);
+        const cur = awExList[awExIdx];
+        const nextSetIdx = cur ? cur.sets.findIndex(s => !s.done) : 0;
+        const nextSetNum = nextSetIdx >= 0 ? nextSetIdx + 1 : 1;
+        updateRestMediaSession(seconds, cur ? cur.ex.name : "", nextSetNum);
+
+        if (awIsExerciseTransitionRest && cur) {
+          speak(`Exercise complete. Rest for ${spokenDur}. Next up: ${cur.ex.name}.`);
+        } else {
+          speak(`Set logged. Rest for ${spokenDur}.`);
         }
 
         awRestTick = setInterval(syncAwRestFromClock, 250);
       }
+
+      try {
+        if ("mediaSession" in navigator) {
+          navigator.mediaSession.setActionHandler("nexttrack", () => {
+            if (awRestEndTime > 0 && awRestLeft > 0) stopAwRestTimer(true);
+          });
+          navigator.mediaSession.setActionHandler("pause", () => {
+            if (awRestEndTime > 0 && awRestLeft > 0) stopAwRestTimer(true);
+          });
+        }
+      } catch (e) {}
 
       // Sync wall-clock timers & re-acquire Wake Lock if phone screen turns back on or app returns to foreground
       document.addEventListener("visibilitychange", () => {
@@ -6656,8 +6905,8 @@
 
         document.getElementById("awHero").classList.remove("collapsed");
         document.getElementById("awMoreMenu").classList.remove("open");
-        stopAwRestTimer(false);
         awOverlay.classList.add("open");
+        stopAwRestTimer(false);
         requestWorkoutWakeLock();
         chimeSetDone();
         announceCurrentTargetSet(`Starting ${day} workout. Start your rep!`);
@@ -6738,9 +6987,10 @@
         if (awSessionStartTime) {
           awSessionSec = Math.max(0, Math.floor((Date.now() - awSessionStartTime) / 1000));
         }
-        stopAwRestTimer(false);
-        releaseWorkoutWakeLock();
         awOverlay.classList.remove("open");
+        stopAwRestTimer(false);
+        stopRestMusic(false);
+        releaseWorkoutWakeLock();
 
         const hrs = Math.floor(awSessionSec / 3600);
         const mins = Math.floor((awSessionSec % 3600) / 60);
@@ -7002,9 +7252,10 @@
           finishActiveWorkoutSession();
         } else {
           if (awSessionTick) clearInterval(awSessionTick);
-          stopAwRestTimer(false);
-          releaseWorkoutWakeLock();
           awOverlay.classList.remove("open");
+          stopAwRestTimer(false);
+          stopRestMusic(false);
+          releaseWorkoutWakeLock();
         }
       });
 
