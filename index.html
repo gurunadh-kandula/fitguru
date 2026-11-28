@@ -4653,10 +4653,10 @@
       </div>
 
       <div id="pushPresetSwitchBox" style="margin-bottom:12px;">
-        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;">Quick Push Templates</div>
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;" id="quickTemplateLabel">Quick Routine Versions</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="pill-btn" id="presetNoBenchPushBtn" style="border-color:rgba(59,130,246,0.45);color:#93c5fd;">🏠 No-Bench Push (5 Exercises)</button>
-          <button class="emerald-btn" id="presetWithBenchPushBtn" style="font-size:12px;padding:6px 11px;border-radius:99px;">🏋️ With Bench Upgrade</button>
+          <button class="pill-btn" id="presetNoBenchPushBtn" style="border-color:rgba(59,130,246,0.45);color:#93c5fd;">🏠 Existing Routine (Original)</button>
+          <button class="emerald-btn" id="presetWithBenchPushBtn" style="font-size:12px;padding:6px 11px;border-radius:99px;">🏋️ New Bench + 20kg Upgrade</button>
         </div>
       </div>
 
@@ -4677,6 +4677,27 @@
       </div>
 
       <button class="primary-btn" style="width:100%;padding:13px;font-size:15px;margin-top:14px;" id="doneEditDayBtn">Done & Save Routine</button>
+    </div>
+  </div>
+
+  <!-- Workout Version Selector Modal (Existing Routine vs Bench + Cube Club 20kg Upgrade) -->
+  <div class="modal-backdrop" id="versionSelectModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <div>
+          <div style="font-size:17px;font-weight:800;" id="vsModalTitle">Choose Workout Version</div>
+          <div style="font-size:12px;color:#94a3b8;" id="vsModalSub">Pick which exercise lineup to run today</div>
+        </div>
+        <button class="close-btn" id="closeVersionSelectModal">✕</button>
+      </div>
+
+      <div id="vsOptionsContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--surface-2);border-radius:12px;font-size:12px;color:#cbd5e1;">
+        <span>Also save selected version as default for this day</span>
+        <input type="checkbox" id="vsSaveDefaultChk" checked style="width:18px;height:18px;accent-color:#3b82f6;" />
+      </div>
     </div>
   </div>
 
@@ -4716,6 +4737,66 @@
       );
 
       const EXERCISES = {
+        chestSupportedRow: {
+          id: "chestSupportedRow",
+          name: "Chest-Supported Dumbbell Row",
+          muscle: "Back",
+          target: "Lats, Mid-Back & Rear Delts (Incline Bench)",
+          sets: 4,
+          reps: 10,
+          defaultWeight: "6.5 kg",
+          rest: 90,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/88.gif",
+          photo: "https://image.myupchar.com/9641/webp/Bent-over-row-benefits.webp",
+          topCue: "Chest Braced on 30°–45° Bench",
+          bottomCue: "Zero Lower-Back Strain · Pull to Ribs",
+          cues: [
+            "Set your Sparnod bench to a 30–45 degree incline and lie face-down with chest supported on the pad.",
+            "Let dumbbells hang straight down, then row both weights back toward your lower ribs squeezing shoulder blades.",
+            "Lower slowly over 3 seconds—with your torso braced on the pad, your front thigh stays completely unloaded."
+          ],
+          mistake: "Lifting your chest off the bench pad at the top of the pull."
+        },
+        inclineCurl: {
+          id: "inclineCurl",
+          name: "Incline Dumbbell Bicep Curl",
+          muscle: "Arms",
+          target: "Biceps Long Head (Incline Bench)",
+          sets: 3,
+          reps: 10,
+          defaultWeight: "5 kg",
+          rest: 60,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/116.gif",
+          photo: "https://app-media.fitbod.me/v2/102/images/landscape/0_960x540.jpg",
+          topCue: "45° Bench Backrest · Deep Stretch",
+          bottomCue: "Elbows Fixed · No Swing",
+          cues: [
+            "Lean back against a 45-degree incline on your bench with arms hanging straight down holding dumbbells.",
+            "Curl the dumbbells smoothly up without letting elbows drift forward.",
+            "Lower slowly over 3 seconds to feel a deep stretch across the biceps."
+          ],
+          mistake: "Heaving the torso forward off the backrest to start the curl."
+        },
+        benchBoxSquat: {
+          id: "benchBoxSquat",
+          name: "Bench Box Squat",
+          muscle: "Legs",
+          target: "Quads & Glutes (Controlled Depth to Bench)",
+          sets: 4,
+          reps: 8,
+          defaultWeight: "5 kg",
+          rest: 120,
+          gif: "https://cdn.jefit.com/assets/img/exercises/gifs/131.gif",
+          photo: "https://i0.wp.com/www.strengthlog.com/wp-content/uploads/2024/10/dumbbell-squat.gif?fit=600%2C600&ssl=1",
+          topCue: "Controlled Sit Back to Bench Pad",
+          bottomCue: "No Abrupt Lunge Stretch · Heels Down",
+          cues: [
+            "Stand in front of your flat Sparnod bench with feet shoulder-width apart and dumbbells at sides or shoulders.",
+            "Sit hips back under full control until glutes lightly touch the bench pad—do not drop or bounce.",
+            "Drive through whole feet to stand tall with knees tracking cleanly over toes."
+          ],
+          mistake: "Plopping heavily onto the bench or letting knees cave inward."
+        },
         deadlift: {
           id: "deadlift",
           name: "Dumbbell Deadlift",
@@ -5295,16 +5376,16 @@
           pop: "9,42,110",
           bg: "linear-gradient(135deg,#10b981,#2563eb)",
           heroImg: EXERCISES.floorPress.gif,
-          equipment: "5 kg Dumbbells, Yoga Mat, Ab Roller, Outdoor Walk",
-          subtitle: "Mon Pull · Wed Mat Push · Fri Legs & Ab Roller · Tue/Thu/Sat 5 km Walk",
+          equipment: "5 kg & Cube Club 20 kg Dumbbells, Sparnod Bench, Yoga Mat, Ab Roller",
+          subtitle: "Mon Pull · Wed Push · Fri Legs & Ab Roller · Tue/Thu/Sat 5 km Walk",
           schedule: [
             { section: "Mon · Pull (Back & Biceps)", short: "Pull", muscleType: "pull", badge: "Tue / Thu / Sat: 5 km Outdoor Walk (Active Recovery)", items: ["deadlift", "row", "bicepCurl", "hammerCurl", "reverseCrunch"] },
-            { section: "Tue · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
+            { section: "Tue · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ▶/✓ to log directly to History", items: ["briskWalk"] },
             {
               section: "Push",
               short: "Push",
               muscleType: "push",
-              badge: "No-Bench Push Day · Tap ✏️ Edit to swap or add bench lifts later",
+              badge: "Existing Push Routine · Choose Original or Bench Version on Start",
               items: ["shoulderPress", "uprightRow", "tricepExt", "hammerCurl", "lateralRaise"],
               defaultSlots: [
                 { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
@@ -5314,9 +5395,9 @@
                 { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] }
               ]
             },
-            { section: "Thu · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
+            { section: "Thu · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ▶/✓ to log directly to History", items: ["briskWalk"] },
             { section: "Fri · Legs & Ab Roller", short: "Legs", muscleType: "legs", badge: "Wall-Assisted Ab Roller (2–3 ft Stopper)", items: ["squat", "lunge", "abRoller", "legRaise"] },
-            { section: "Sat · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ✓ square button to log directly to History", items: ["briskWalk"] },
+            { section: "Sat · 5 km Outdoor Walk", short: "Walk", muscleType: "walk", badge: "Tap ▶/✓ to log directly to History", items: ["briskWalk"] },
             { section: "Rest", short: "Rest", muscleType: "rest", badge: "Muscles Grow During Rest · Prep for Monday Pull", items: [] }
           ]
         },
@@ -5584,7 +5665,7 @@
         historyLog: [],
         completedWorkouts: [],
         githubSync: { token: "", gistId: "", lastSync: "" },
-        planConfig: { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" }
+        planConfig: { goal: "Recomp", duration: "45 Min", equipment: "Bench · 20kg" }
       };
 
       try {
@@ -5597,7 +5678,7 @@
           if (!state.editedDayPlans || typeof state.editedDayPlans !== "object") state.editedDayPlans = {};
           if (!state.completedSets || typeof state.completedSets !== "object") state.completedSets = {};
           if (!state.githubSync || typeof state.githubSync !== "object") state.githubSync = { token: "", gistId: "", lastSync: "" };
-          if (!state.planConfig) state.planConfig = { goal: "Recomp", duration: "45 Min", equipment: "Home · 5kg" };
+          if (!state.planConfig) state.planConfig = { goal: "Recomp", duration: "45 Min", equipment: "Bench · 20kg" };
           if (!state.activePlanId || !FULL_PLANS[state.activePlanId]) state.activePlanId = "homeRecomp";
         }
       } catch (e) {}
@@ -5911,8 +5992,12 @@
         restMusicAudio.volume = REST_MUSIC_DUCK_VOL;
         if (musicDuckTimeout) clearTimeout(musicDuckTimeout);
         musicDuckTimeout = setTimeout(() => {
-          if (restMusicAudio && isRestMusicPlaying) {
+          if (restMusicAudio && isRestMusicPlaying && awRestEndTime > 0) {
             restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+            if (restMusicAudio.paused) {
+              const p = restMusicAudio.play();
+              if (p && p.catch) p.catch(() => {});
+            }
           }
         }, durationMs || 3200);
       }
@@ -6015,8 +6100,12 @@
             u.pitch = 1.0;
             u.volume = 1.0;
             u.onend = () => {
-              if (restMusicAudio && isRestMusicPlaying) {
+              if (restMusicAudio && isRestMusicPlaying && awRestEndTime > 0) {
                 restMusicAudio.volume = REST_MUSIC_NORMAL_VOL;
+                if (restMusicAudio.paused) {
+                  const p = restMusicAudio.play();
+                  if (p && p.catch) p.catch(() => {});
+                }
               }
             };
             window.speechSynthesis.speak(u);
@@ -6396,8 +6485,8 @@
 
           const isWalk = ex.id === "briskWalk";
           const weightOptions = isWalk
-            ? ["3.0 km", "4.0 km", "5.0 km", "6.0 km", "7.0 km"]
-            : ["Bodyweight", "5 kg", "7.5 kg", "10 kg", "12.5 kg", "15 kg"];
+            ? ["1.5 km", "2.0 km", "3.0 km", "5.0 km", "6.0 km"]
+            : ["Bodyweight", "5 kg", "6.5 kg", "7.5 kg", "9 kg", "10 kg", "14 kg"];
           const selectorLabel = isWalk ? "Target Distance:" : "Target Load:";
 
           const weightChipsHtml = `
@@ -6460,7 +6549,7 @@
           btn.addEventListener("click", (e) => {
             e.stopPropagation();
             const startIdx = parseInt(btn.getAttribute("data-start-ex-idx"), 10) || 0;
-            openActiveWorkoutPlayer(startIdx);
+            promptWorkoutVersionBeforeStart(startIdx);
           });
         });
 
@@ -6564,6 +6653,7 @@
       let awRestTick = null;
       let awWarned15 = false;
       let awLastBeepSec = -1;
+      let awRestStartedAtMs = 0;
       let awIsExerciseTransitionRest = false;
       let awIntervalMode = false;
       let awHeartRate = 111;
@@ -6739,7 +6829,8 @@
         if (awRestTick) clearInterval(awRestTick);
         awRestTotal = seconds;
         awRestLeft = seconds;
-        awRestEndTime = Date.now() + seconds * 1000;
+        awRestStartedAtMs = Date.now();
+        awRestEndTime = awRestStartedAtMs + seconds * 1000;
         awWarned15 = false;
         awLastBeepSec = -1;
         lastMediaSessionSec = -1;
@@ -6795,7 +6886,17 @@
             if (awRestEndTime > 0 && awRestLeft > 0) stopAwRestTimer(true);
           });
           navigator.mediaSession.setActionHandler("pause", () => {
-            if (awRestEndTime > 0 && awRestLeft > 0) stopAwRestTimer(true);
+            // iOS fires 'pause' automatically when speechSynthesis speaks or a notification arrives.
+            // Only pause the audio element—never cancel or skip the rest countdown timer.
+            if (restMusicAudio && !restMusicAudio.paused) {
+              try { restMusicAudio.pause(); } catch (e) {}
+            }
+          });
+          navigator.mediaSession.setActionHandler("play", () => {
+            if (awRestEndTime > 0 && isRestMusicPlaying && restMusicAudio && restMusicAudio.paused) {
+              const p = restMusicAudio.play();
+              if (p && p.catch) p.catch(() => {});
+            }
           });
         }
       } catch (e) {}
@@ -7276,10 +7377,188 @@
         shareModal.classList.add("open");
       }
 
-      document.getElementById("startWorkoutBtn").addEventListener("click", () => openActiveWorkoutPlayer());
+      const DAY_VERSION_PRESETS = {
+        Mon: {
+          existing: {
+            label: "Existing Pull Routine (Original)",
+            tag: "5–10 kg Dumbbells · Mat",
+            slots: [
+              { exId: "deadlift", sets: 4, repScheme: [8, 8, 8, 8] },
+              { exId: "row", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "bicepCurl", sets: 3, repScheme: [12, 12, 12] },
+              { exId: "hammerCurl", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "reverseCrunch", sets: 3, repScheme: [10, 10, 10] }
+            ]
+          },
+          upgraded: {
+            label: "New Bench & Cube Club Pull",
+            tag: "Sparnod Bench + 6.5 kg Upgrade",
+            slots: [
+              { exId: "chestSupportedRow", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "row", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "inclineCurl", sets: 3, repScheme: [10, 10, 10] },
+              { exId: "hammerCurl", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "reverseCrunch", sets: 3, repScheme: [10, 10, 10] }
+            ]
+          }
+        },
+        Wed: {
+          existing: {
+            label: "Existing Push Routine (No-Bench)",
+            tag: "5 kg Dumbbells · Original 5 Lifts",
+            slots: [
+              { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
+              { exId: "uprightRow", sets: 4, repScheme: [12, 9, 9, 9] },
+              { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "hammerCurl", sets: 4, repScheme: [15, 9, 9, 9] },
+              { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] }
+            ]
+          },
+          upgraded: {
+            label: "New Sparnod Bench Push (Chest + Shoulders)",
+            tag: "Flat & Incline Bench Press + 6.5 kg",
+            slots: [
+              { exId: "dbBenchPress", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "dbInclinePress", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "shoulderPress", sets: 3, repScheme: [8, 8, 8] },
+              { exId: "lateralRaise", sets: 3, repScheme: [12, 12, 12] },
+              { exId: "tricepExt", sets: 3, repScheme: [10, 10, 10] }
+            ]
+          }
+        },
+        Fri: {
+          existing: {
+            label: "Existing Legs & Ab Roller (Original)",
+            tag: "Squats + Lunges + Ab Roller",
+            slots: [
+              { exId: "squat", sets: 5, repScheme: [8, 8, 8, 8, 8] },
+              { exId: "lunge", sets: 4, repScheme: [12, 12, 12, 12] },
+              { exId: "abRoller", sets: 3, repScheme: [8, 8, 8] },
+              { exId: "legRaise", sets: 3, repScheme: [10, 10, 10] }
+            ]
+          },
+          upgraded: {
+            label: "New Bench Box Squat + Lunges & Core",
+            tag: "Sparnod Bench Box Squat + Ab Roller",
+            slots: [
+              { exId: "benchBoxSquat", sets: 4, repScheme: [10, 10, 10, 10] },
+              { exId: "lunge", sets: 3, repScheme: [10, 10, 10] },
+              { exId: "abRoller", sets: 3, repScheme: [8, 8, 8] },
+              { exId: "legRaise", sets: 3, repScheme: [10, 10, 10] }
+            ]
+          }
+        }
+      };
+
+      const versionSelectModal = document.getElementById("versionSelectModal");
+      let pendingForcedStartIdx = undefined;
+
+      function applyDayVersionAndLaunch(day, chosenSlots, saveAsDefault) {
+        const key = `${state.activePlanId}_${day}`;
+        state.editedDayPlans[key] = chosenSlots.map(s => ({
+          exId: s.exId,
+          sets: s.sets,
+          repScheme: s.repScheme.slice()
+        }));
+        if (saveAsDefault) {
+          saveState();
+        }
+        renderDayStrip();
+        renderDayWorkout();
+        if (document.getElementById("overviewBox").style.display === "block") renderTimelineOverview();
+        versionSelectModal.classList.remove("open");
+        openActiveWorkoutPlayer(pendingForcedStartIdx);
+      }
+
+      function promptWorkoutVersionBeforeStart(forcedStartIdx) {
+        const day = state.activeDay;
+        pendingForcedStartIdx = forcedStartIdx;
+        if (state.activePlanId !== "homeRecomp" || !DAY_VERSION_PRESETS[day]) {
+          openActiveWorkoutPlayer(forcedStartIdx);
+          return;
+        }
+
+        const presets = DAY_VERSION_PRESETS[day];
+        const currentSlots = getDayExerciseSlots(day);
+        const currentIds = currentSlots.map(s => s.exId).join(",");
+        const existingIds = presets.existing.slots.map(s => s.exId).join(",");
+        const upgradedIds = presets.upgraded.slots.map(s => s.exId).join(",");
+        const hasCustomDiff = currentIds !== existingIds && currentIds !== upgradedIds;
+
+        document.getElementById("vsModalTitle").textContent = `Start ${day} Workout`;
+        document.getElementById("vsModalSub").textContent = "Choose existing exercises or new Bench + Cube Club set";
+
+        const formatNames = (slots) => slots.map(s => (EXERCISES[s.exId] ? EXERCISES[s.exId].name : s.exId)).join(" · ");
+
+        const options = [
+          {
+            key: "existing",
+            badge: currentIds === existingIds ? "CURRENT DEFAULT" : "EXISTING SET",
+            badgeColor: "#60a5fa",
+            borderColor: currentIds === existingIds ? "rgba(59,130,246,0.65)" : "rgba(255,255,255,0.1)",
+            title: presets.existing.label,
+            sub: presets.existing.tag,
+            list: formatNames(presets.existing.slots),
+            slots: presets.existing.slots
+          },
+          {
+            key: "upgraded",
+            badge: currentIds === upgradedIds ? "CURRENT DEFAULT" : "NEW BENCH + 20KG SET",
+            badgeColor: "#34d399",
+            borderColor: currentIds === upgradedIds ? "rgba(16,185,129,0.65)" : "rgba(16,185,129,0.35)",
+            title: presets.upgraded.label,
+            sub: presets.upgraded.tag,
+            list: formatNames(presets.upgraded.slots),
+            slots: presets.upgraded.slots
+          }
+        ];
+
+        if (hasCustomDiff) {
+          options.unshift({
+            key: "custom",
+            badge: "YOUR CUSTOM LIST",
+            badgeColor: "#fbbf24",
+            borderColor: "rgba(251,191,36,0.55)",
+            title: `Current Saved ${day} Routine (${currentSlots.length} exercises)`,
+            sub: "Your customized lineup",
+            list: formatNames(currentSlots),
+            slots: currentSlots
+          });
+        }
+
+        const box = document.getElementById("vsOptionsContainer");
+        box.innerHTML = options.map((opt, i) => `
+          <div data-pick-vs="${i}" style="background:var(--surface-2);border:1.5px solid ${opt.borderColor};border-radius:16px;padding:13px 14px;cursor:pointer;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
+              <span style="font-size:10px;font-weight:800;letter-spacing:0.5px;color:${opt.badgeColor};">${opt.badge}</span>
+              <span style="font-size:12px;font-weight:800;color:#fff;">Start ▶</span>
+            </div>
+            <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:2px;">${opt.title}</div>
+            <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;">${opt.sub}</div>
+            <div style="font-size:12px;color:#cbd5e1;line-height:1.4;">${opt.list}</div>
+          </div>
+        `).join("");
+
+        box.querySelectorAll("[data-pick-vs]").forEach(card => {
+          card.addEventListener("click", () => {
+            const idx = parseInt(card.getAttribute("data-pick-vs"), 10);
+            const saveDef = document.getElementById("vsSaveDefaultChk").checked;
+            playTone(540, 0.08, "sine", 0);
+            applyDayVersionAndLaunch(day, options[idx].slots, saveDef);
+          });
+        });
+
+        versionSelectModal.classList.add("open");
+      }
+
+      document.getElementById("closeVersionSelectModal").addEventListener("click", () => versionSelectModal.classList.remove("open"));
+      versionSelectModal.addEventListener("click", (e) => { if (e.target === versionSelectModal) versionSelectModal.classList.remove("open"); });
+
+      document.getElementById("startWorkoutBtn").addEventListener("click", () => promptWorkoutVersionBeforeStart());
 
       document.getElementById("awPrimaryActionBtn").addEventListener("click", () => {
         if (awRestEndTime > 0 && awRestLeft > 0) {
+          if (Date.now() - awRestStartedAtMs < 600) return;
           stopAwRestTimer(true);
         } else {
           const cur = awExList[awExIdx];
@@ -8040,7 +8319,13 @@
         const day = state.activeDay;
         const plan = getDayPlan(day);
         document.getElementById("editDayModalTitle").textContent = `Customize ${day} · ${plan.fullTitle}`;
-        document.getElementById("pushPresetSwitchBox").style.display = day === "Wed" ? "block" : "none";
+        const hasDualPresets = state.activePlanId === "homeRecomp" && !!DAY_VERSION_PRESETS[day];
+        document.getElementById("pushPresetSwitchBox").style.display = hasDualPresets ? "block" : "none";
+        if (hasDualPresets) {
+          document.getElementById("quickTemplateLabel").textContent = `Quick ${day} Versions`;
+          document.getElementById("presetNoBenchPushBtn").textContent = `🏠 ${DAY_VERSION_PRESETS[day].existing.label}`;
+          document.getElementById("presetWithBenchPushBtn").textContent = `🏋️ ${DAY_VERSION_PRESETS[day].upgraded.label}`;
+        }
         workingEditSlots = getDayExerciseSlots(day).map(s => ({
           exId: s.exId,
           sets: s.sets,
@@ -8056,27 +8341,19 @@
       editDayModal.addEventListener("click", (e) => { if (e.target === editDayModal) editDayModal.classList.remove("open"); });
 
       document.getElementById("presetNoBenchPushBtn").addEventListener("click", () => {
-        workingEditSlots = [
-          { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
-          { exId: "uprightRow", sets: 4, repScheme: [12, 9, 9, 9] },
-          { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] },
-          { exId: "hammerCurl", sets: 4, repScheme: [15, 9, 9, 9] },
-          { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] }
-        ];
+        const day = state.activeDay;
+        const preset = DAY_VERSION_PRESETS[day] ? DAY_VERSION_PRESETS[day].existing : DAY_VERSION_PRESETS.Wed.existing;
+        workingEditSlots = preset.slots.map(s => ({ exId: s.exId, sets: s.sets, repScheme: s.repScheme.slice() }));
         renderEditDaySlots();
-        showToast("Loaded No-Bench Push (5 exercises)");
+        showToast(`Loaded ${preset.label}`);
       });
 
       document.getElementById("presetWithBenchPushBtn").addEventListener("click", () => {
-        workingEditSlots = [
-          { exId: "dbBenchPress", sets: 4, repScheme: [10, 10, 10, 10] },
-          { exId: "dbInclinePress", sets: 4, repScheme: [10, 10, 10, 10] },
-          { exId: "shoulderPress", sets: 4, repScheme: [8, 8, 8, 8] },
-          { exId: "lateralRaise", sets: 4, repScheme: [10, 10, 10, 10] },
-          { exId: "tricepExt", sets: 4, repScheme: [10, 10, 10, 10] }
-        ];
+        const day = state.activeDay;
+        const preset = DAY_VERSION_PRESETS[day] ? DAY_VERSION_PRESETS[day].upgraded : DAY_VERSION_PRESETS.Wed.upgraded;
+        workingEditSlots = preset.slots.map(s => ({ exId: s.exId, sets: s.sets, repScheme: s.repScheme.slice() }));
         renderEditDaySlots();
-        showToast("Loaded Bench Push Upgrade!");
+        showToast(`Loaded ${preset.label}!`);
       });
 
       document.getElementById("editAddSelectedExBtn").addEventListener("click", () => {
