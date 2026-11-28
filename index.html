@@ -3082,6 +3082,50 @@
       text-transform: uppercase;
     }
 
+    .aw-check.locked {
+      opacity: 0.28;
+      cursor: not-allowed;
+    }
+
+    .aw-main-cta.resting-locked {
+      background: #1a2334;
+      border: 1.5px solid rgba(60, 163, 116, 0.55);
+      color: #6ee7b7;
+      font-size: 13px;
+    }
+
+    .aw-end-wk-btn {
+      height: 34px;
+      padding: 0 11px;
+      border-radius: 99px;
+      background: rgba(244, 63, 94, 0.18);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      color: #fda4af;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .aw-swipe-hint-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.14);
+      border: 1px solid rgba(59, 130, 246, 0.32);
+      color: #93c5fd;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+    }
+
     .aw-more-menu {
       position: absolute;
       top: calc(var(--safe-top) + 52px);
@@ -4326,11 +4370,12 @@
       <div class="aw-hero" id="awHero">
         <div class="aw-top-controls">
           <div class="aw-top-left">
-            <button class="aw-round-btn" id="awCloseBtn" title="Finish / Close Workout">
+            <button class="aw-round-btn" id="awCloseBtn" title="Minimize / Close Overlay (Keeps Workout Active)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <path d="M18 6L6 18M6 6l12 12"/>
               </svg>
             </button>
+            <button class="aw-end-wk-btn" id="awEndWorkoutBtn" title="End Workout & View Summary">⏹ End Workout</button>
             <span class="aw-wakelock-pill" id="awWakeLockPill" title="Prevents iPhone screen from auto-locking during workout">☀️ Awake</span>
             <div class="aw-compact-vitals">
               <span><span style="color:#f43f5e;">♥</span> <span id="awCompactHr">115</span></span>
@@ -4373,6 +4418,7 @@
 
       <!-- Exercise Title + Rest / Interval / 1RM Header -->
       <div class="aw-ex-header">
+        <div class="aw-swipe-hint-pill" id="awSwipeTabBadge">⇄ Swipe left/right to inspect exercises · Tab 1/1</div>
         <div class="aw-next-ex-pill" id="awNextExBadge" style="display:none;">⏭ Next Exercise · Resting Before Set 1</div>
         <div class="aw-ex-title" id="awExTitle">Dumbbell Shoulder Press</div>
         <div class="aw-sub-controls">
@@ -6745,6 +6791,14 @@
         };
       } catch (e) {}
 
+      let awStarterSpeakingUntil = 0;
+
+      function isAwRestBlockingNewLog() {
+        if (awRestEndTime > 0 && awRestLeft > 0) return true;
+        if (Date.now() < awStarterSpeakingUntil) return true;
+        return false;
+      }
+
       function stopAwRestTimer(announceStartRep) {
         if (awRestTick) {
           clearInterval(awRestTick);
@@ -6769,18 +6823,24 @@
         document.getElementById("awRestLbl").textContent = "Rest";
         document.getElementById("awNextExBadge").style.display = "none";
 
-        const cta = document.getElementById("awPrimaryActionBtn");
-        cta.textContent = "Log Set";
-        cta.classList.remove("skip-mode");
-        renderActiveWorkoutPlayer();
-
         if (announceStartRep) {
+          awStarterSpeakingUntil = Date.now() + 2600;
           playTone(659.25, 0.14, "sine", 0);
           playTone(880, 0.16, "sine", 0.14);
           playTone(1046.5, 0.25, "sine", 0.28);
           try { if (navigator.vibrate) navigator.vibrate([120, 80, 180]); } catch (e) {}
           announceCurrentTargetSet("Rest over! Start your rep.");
+          setTimeout(() => {
+            if (Date.now() >= awStarterSpeakingUntil - 50) {
+              awStarterSpeakingUntil = 0;
+              renderActiveWorkoutPlayer();
+            }
+          }, 2650);
+        } else {
+          awStarterSpeakingUntil = 0;
         }
+
+        renderActiveWorkoutPlayer();
       }
 
       let lastMediaSessionSec = -1;
@@ -6973,6 +7033,12 @@
         document.getElementById("awCompactHr").textContent = anyLoggedYet ? awHeartRate : "--";
         document.getElementById("awCompactKcal").textContent = anyLoggedYet ? awCalories : "--";
 
+        // Swipe indicator badge
+        const swipeBadge = document.getElementById("awSwipeTabBadge");
+        if (swipeBadge) {
+          swipeBadge.textContent = `⇄ Swipe tabs to view exercises (${awExIdx + 1}/${awExList.length})`;
+        }
+
         // Title, Rest preset chip, and 1RM
         document.getElementById("awExTitle").textContent = ex.name;
         const restSec = getRestDurationForEx(ex);
@@ -6984,6 +7050,22 @@
         // Find first incomplete set to highlight in blue
         const activeSetIdx = cur.sets.findIndex(s => !s.done);
         const isResting = awRestEndTime > 0 && awRestLeft > 0;
+        const cta = document.getElementById("awPrimaryActionBtn");
+        if (cta) {
+          if (isResting) {
+            cta.textContent = `Skip Rest (${formatSec(awRestLeft)})`;
+            cta.classList.add("skip-mode");
+            cta.classList.remove("resting-locked");
+          } else if (Date.now() < awStarterSpeakingUntil) {
+            cta.textContent = "Starter Cue · Get Ready";
+            cta.classList.remove("skip-mode");
+            cta.classList.add("resting-locked");
+          } else {
+            cta.textContent = "Log Set";
+            cta.classList.remove("skip-mode", "resting-locked");
+          }
+        }
+
         const setsBox = document.getElementById("awSetsContainer");
         setsBox.innerHTML = cur.sets.map((s, sIdx) => {
           const isCurrent = sIdx === activeSetIdx;
@@ -6993,6 +7075,7 @@
           const rowCls = ["aw-set-row"];
           if (isCurrent) rowCls.push("active-set");
           if (isCurrent && isResting) rowCls.push("resting-next");
+          const checkLockCls = (!s.done && isResting) ? "locked" : "";
 
           return `<div class="${rowCls.join(" ")}">
             <div class="aw-set-num">${sIdx + 1}</div>
@@ -7004,7 +7087,7 @@
               <button class="aw-val-btn" data-aw-edit-r="${sIdx}">${s.reps}</button>
               ${subReps ? `<div class="aw-sub-hint">${subReps}</div>` : ""}
             </div>
-            <button class="aw-check ${s.done ? "done" : ""}" data-aw-check="${sIdx}">✓</button>
+            <button class="aw-check ${s.done ? "done" : ""} ${checkLockCls}" data-aw-check="${sIdx}">✓</button>
           </div>`;
         }).join("");
 
@@ -7046,6 +7129,10 @@
 
         setsBox.querySelectorAll("[data-aw-check]").forEach(btn => {
           btn.addEventListener("click", () => {
+            if (isAwRestBlockingNewLog()) {
+              showToast("⏳ Rest in progress — wait for timer & starter cue or tap Skip Rest");
+              return;
+            }
             const sIdx = parseInt(btn.getAttribute("data-aw-check"), 10);
             completeAwSet(sIdx);
           });
@@ -7053,6 +7140,10 @@
       }
 
       function completeAwSet(sIdx) {
+        if (isAwRestBlockingNewLog()) {
+          showToast("⏳ Rest in progress — wait for timer & starter cue or tap Skip Rest");
+          return;
+        }
         const cur = awExList[awExIdx];
         if (!cur) return;
         const ex = cur.ex;
@@ -7668,6 +7759,12 @@
       });
 
       document.getElementById("awCloseBtn").addEventListener("click", () => {
+        awOverlay.classList.remove("open");
+        document.getElementById("awMoreMenu").classList.remove("open");
+        showToast("Workout minimized — tap Start Workout to resume");
+      });
+
+      document.getElementById("awEndWorkoutBtn").addEventListener("click", () => {
         const anyDone = awExList.some(item => item.sets.some(s => s.done));
         if (anyDone) {
           finishActiveWorkoutSession();
@@ -7677,6 +7774,7 @@
           stopAwRestTimer(false);
           stopRestMusic(false);
           releaseWorkoutWakeLock();
+          showToast("Workout ended");
         }
       });
 
@@ -7718,6 +7816,48 @@
         switchProgressSubTab("overview");
         showToast("✓ Workout saved to Progress & Calendar!");
       });
+
+      let awSwipeStartX = 0;
+      let awSwipeStartY = 0;
+      const awShellEl = document.querySelector("#activeWorkoutOverlay .aw-shell");
+      if (awShellEl) {
+        awShellEl.addEventListener("touchstart", (e) => {
+          if (!awOverlay.classList.contains("open")) return;
+          if (e.target.closest("button, input, select, .aw-rest-banner, .aw-bottom-dock")) {
+            awSwipeStartX = 0;
+            awSwipeStartY = 0;
+            return;
+          }
+          const t = e.touches && e.touches[0];
+          if (!t) return;
+          awSwipeStartX = t.clientX;
+          awSwipeStartY = t.clientY;
+        }, { passive: true });
+
+        awShellEl.addEventListener("touchend", (e) => {
+          if (!awOverlay.classList.contains("open") || !awSwipeStartX) return;
+          const t = e.changedTouches && e.changedTouches[0];
+          if (!t) return;
+          const dx = t.clientX - awSwipeStartX;
+          const dy = t.clientY - awSwipeStartY;
+          awSwipeStartX = 0;
+          awSwipeStartY = 0;
+
+          if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.35 && awExList.length > 1) {
+            if (dx < 0 && awExIdx < awExList.length - 1) {
+              awExIdx += 1;
+              playTone(460, 0.05, "sine", 0);
+              renderActiveWorkoutPlayer();
+              showToast(`Viewing ${awExList[awExIdx].ex.name} (${awExIdx + 1}/${awExList.length})`);
+            } else if (dx > 0 && awExIdx > 0) {
+              awExIdx -= 1;
+              playTone(460, 0.05, "sine", 0);
+              renderActiveWorkoutPlayer();
+              showToast(`Viewing ${awExList[awExIdx].ex.name} (${awExIdx + 1}/${awExList.length})`);
+            }
+          }
+        }, { passive: true });
+      }
 
       // Form Modal
       let activeModalEx = null;
